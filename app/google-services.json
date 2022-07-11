@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1001136823104",
+    "project_id": "bustracker-c52f5",
+    "storage_bucket": "bustracker-c52f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001136823104:android:9302fa7ce3186beed778a5",
+        "android_client_info": {
+          "package_name": "com.example.school_bus_transit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001136823104-t48eqvcj3ujdgtelk9s5ksbd4ffe4269.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.school_bus_transit",
+            "certificate_hash": "15e5f14b5aa6f5b4c7dde78ad96e59a4cc40d9c9"
+          }
+        },
+        {
+          "client_id": "1001136823104-ttnvc66lrah5lm95mqnj2og6ues811pk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.school_bus_transit",
+            "certificate_hash": "b109c2426b86550aded565d89cef2a6fb2ad39ae"
+          }
+        },
+        {
+          "client_id": "1001136823104-rbh8tvs5un0ol2m7ee8dr57hftp9ib0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw7xOdV7PUt1Ru-oMNHZYWjfX3QlVMlD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001136823104-rbh8tvs5un0ol2m7ee8dr57hftp9ib0v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1001136823104-jhf6qmv7ob1u4s3tsn45b8ml33lsm91e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "BusTransit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
