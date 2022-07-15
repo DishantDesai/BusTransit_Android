@@ -23,5 +23,66 @@ public class SchoolModel {
         this.lat = lat;
         this.lng = lng;
     }
+    public String getname() {
+        return name;
+    }
+
+    public void setname(String name) {
+        this.name = name;
+    }
+
+    public String getphone_no() {
+        return phone_no;
+    }
+
+    public void setphone_no(String phone_no) {
+        this.phone_no = phone_no;
+    }
+
+
+    public String getschool_id() {
+        return school_id;
+    }
+
+    public void setschool_id(String school_id) {
+        this.school_id = school_id;
+    }
+
+    public String getemail_id() {
+        return email_id;
+    }
+
+    public void setemail_id(String email_id) {
+        this.email_id = email_id;
+    }
+
+    public String getaddress() {
+        return address;
+    }
+
+    public void setaddress(String address) {
+        this.address = address;
+    }
+
+    public String getlat() {
+        return lat;
+    }
+
+    public void setlat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getlong() {
+        return lng;
+    }
+
+    public void setlong(String lng) {
+        this.lng = lng;
+    }
+
+
+
+
+
 
 }
