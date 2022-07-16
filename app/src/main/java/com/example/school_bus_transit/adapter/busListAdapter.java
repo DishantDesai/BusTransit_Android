@@ -1,8 +1,6 @@
 package com.example.school_bus_transit.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +10,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.R;
-import com.example.school_bus_transit.admin.schoolDetails;
-import com.example.school_bus_transit.model.SchoolModel;
+import com.example.school_bus_transit.model.BusModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SchoolAdapter extends RecyclerView.Adapter<SchoolAdapter.ViewHolder> {
-    ArrayList<SchoolModel> school;
+public class busListAdapter extends RecyclerView.Adapter<busListAdapter.ViewHolder> implements Serializable {
+    ArrayList<BusModel> school;
     private Context context;
-    public SchoolAdapter(Context context, ArrayList<SchoolModel> school) {
+    public busListAdapter(Context context, ArrayList<BusModel> school) {
         this.school = school;
         this.context = context;
     }
@@ -31,12 +27,11 @@ public class SchoolAdapter extends RecyclerView.Adapter<SchoolAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType) {
-        System.out.println("parent "+ parent);
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.sampleschooldata, parent, false);
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.samplebusdata, parent, false);
         return new ViewHolder (inflate);
     }
 
-    public void updateData(ArrayList<SchoolModel> matchFood)
+    public void updateData(ArrayList<BusModel> matchFood)
     {
         this.school = matchFood;
         notifyDataSetChanged();
@@ -44,26 +39,33 @@ public class SchoolAdapter extends RecyclerView.Adapter<SchoolAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder,int position) {
-        holder.title.setText(school.get(position).getname());
+        holder.no.setText(school.get(position).getbus_number());
+
+        if(school.get(position).getactive_sharing())
+        {
+            holder.status.setText("On");
+        }
+        else
+        {
+            holder.status.setText("Off");
+        }
+        holder.address.setText(school.get(position).getdestination());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, schoolDetails.class);
+//                Intent intent = new Intent(context, DishDetails.class);
 
-                intent.putExtra("school_id",school.get(position).getschool_id());
-                intent.putExtra("position",position);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+//                intent.putExtra("dish",school.get(position));
+//                intent.putExtra("position",position);
+
+//                context.startActivity(intent);
             }
         });
 
 //        Glide.with(holder.itemView.getContext())
 //                .load("")
 //                .into(holder.pic);
-
-
-        holder.pic.setImageResource(R.drawable.logo);
 
     }
     @Override
@@ -72,13 +74,13 @@ public class SchoolAdapter extends RecyclerView.Adapter<SchoolAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        ImageView pic;
+        TextView no , status , address;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.schoolName);
-            pic = itemView.findViewById(R.id.school_item_image);
+            no = itemView.findViewById(R.id.admin_school_bus_no);
+            status = itemView.findViewById(R.id.admin_school_bus_status);
+            address = itemView.findViewById(R.id.admin_school_bus_address);
         }
     }
 }
