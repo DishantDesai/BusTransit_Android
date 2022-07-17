@@ -8,26 +8,26 @@
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shape.xml" value="0.158" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapeGreen.xml" value="0.158" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapeYellow.xml" value="0.158" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapegreen.xml" value="0.218" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapeyellow.xml" value="0.158" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_admin_dash_board.xml" value="0.22826086956521738" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_home_screen.xml" value="0.22826086956521738" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_login.xml" value="0.22826086956521738" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_registration.xml" value="0.22826086956521738" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_school_details.xml" value="0.22146739130434784" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_view_all_schools.xml" value="0.22826086956521738" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/samplebusdata.xml" value="0.22146739130434784" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/sampleschooldata.xml" value="0.22826086956521738" />
         <entry key="app/src/main/res/drawable/gradiant_backgrounf.xml" value="0.1835" />
         <entry key="app/src/main/res/drawable/image_background.xml" value="0.1065" />
         <entry key="app/src/main/res/layout/activity_add_new_bus.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_add_new_school.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_admin_dash_board.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_driver_bus_info.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.3182291666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.14695841471354165" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1609375" />
         <entry key="app/src/main/res/layout/activity_registration.xml" value="0.23052651009908537" />
+        <entry key="app/src/main/res/layout/activity_school_details.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_view_all_schools.xml" value="0.25833333333333336" />
       </map>
     </option>
   </component>

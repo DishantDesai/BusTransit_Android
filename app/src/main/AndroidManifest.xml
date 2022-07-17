@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusTransit_Android">
         <activity
+            android:name=".DriverBusInfo"
+            android:exported="false" />
+        <activity
             android:name=".admin.add_new_bus"
             android:exported="false" />
         <activity
