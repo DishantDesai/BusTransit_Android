@@ -326,6 +326,7 @@ public class Registration extends AppCompatActivity {
         String userTypeVal = ((RadioButton) findViewById(userTypeIdVal)).getText().toString();
         int genderIdVal = gender.getCheckedRadioButtonId();
         String genderVal = ((RadioButton) findViewById(genderIdVal)).getText().toString();
+
         try{
             if(!isNameValid() | !isEmailValid() | !isPhoneNoValid() | !isPasswordValid() | !isConfirmPasswordValid() | !isAddressValid() | (userTypeVal.equalsIgnoreCase("parent") && !isSchoolValid())){
                 return;

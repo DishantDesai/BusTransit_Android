@@ -10,10 +10,10 @@ import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.school_bus_transit.admin.add_new_bus;
 import com.example.school_bus_transit.admin.adminDashBoard;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.UserModel;
@@ -57,7 +57,8 @@ public class Login extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Login.this, Registration.class));
+//                startActivity(new Intent(Login.this, Registration.class));
+                startActivity(new Intent(Login.this, add_new_bus.class));
             }
         });
 
