@@ -20,9 +20,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class viewAllSchools extends AppCompatActivity {
+public class viewAllSchools extends AppCompatActivity implements Serializable  {
 
     private RecyclerView recyclerViewSchoolList;
     private RecyclerView.Adapter schoolAdapter;

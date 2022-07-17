@@ -47,4 +47,37 @@ public class BusModel {
         this.source_lat=source_lat;
         this.source_long=source_long;
     }
+
+    public String getbus_number() {
+        return bus_number;
+    }
+
+    public void setbus_number(String bus_number) {
+        this.bus_number = bus_number;
+    }
+
+    public String getschool_id() {
+        return school_id;
+    }
+
+    public void setschool_id(String school_id) {
+        this.school_id = school_id;
+    }
+
+    public String getdestination() {
+        return destination;
+    }
+
+    public void setdestination(String destination) {
+        this.destination = destination;
+    }
+
+    public Boolean getactive_sharing() {
+        return active_sharing;
+    }
+
+    public void setactive_sharing(Boolean active_sharing) {
+        this.active_sharing = active_sharing;
+    }
+
 }
