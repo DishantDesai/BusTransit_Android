@@ -1,32 +1,50 @@
 package com.example.school_bus_transit.admin;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.helper.constants;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class add_new_bus extends AppCompatActivity {
     private final int AUTOCOMPLETE_REQUEST_CODE = 1;
     EditText endDestination;
-    TextInputLayout busNo;
+    EditText add_bus_no;
     Button addBus;
+    FirebaseAuth mAuth;
+    FirebaseFirestore fStore;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    String doc_id = "";
+    String school_id = "",school_address="",school_lat="",school_long="";
 
     private String photo_url = null,user_lat,user_long;
 
@@ -37,9 +55,28 @@ public class add_new_bus extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_bus);
         getSupportActionBar();
 
-        busNo = findViewById(R.id.bus_no);
+
+        add_bus_no = findViewById(R.id.add_bus_no);
+        add_bus_no.setFocusable(false);
+        int val = 100 + constants.allbus.size();
+        add_bus_no.setText(String.valueOf(val));
+
+
         endDestination = findViewById(R.id.end_address);
         addBus = findViewById(R.id.add_bus);
+        school_id = (String) getIntent().getSerializableExtra("school_id");
+
+        school_address=(String) getIntent().getSerializableExtra("school_address");
+        school_lat=(String) getIntent().getSerializableExtra("school_lat");
+        school_long=(String) getIntent().getSerializableExtra("school_long");
+
+        //Firebase Object Initialisation
+        mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+
 
 
         //Select End Destination from autocomplete
@@ -57,6 +94,7 @@ public class add_new_bus extends AppCompatActivity {
 
             }
         });
+
         //Initialise Places
         Places.initialize(getApplicationContext(),"AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw");
         endDestination.setFocusable(false);
@@ -101,13 +139,13 @@ public class add_new_bus extends AppCompatActivity {
 
         private Boolean isBusNumberValid()
         {
-            String name = busNo.getEditText().getText().toString();
+            String name = add_bus_no.getText().toString();
             if(name.isEmpty()){
-                busNo.setError("Field cannot be empty!");
+                add_bus_no.setError("Field cannot be empty!");
                 return false;
             }else
             {
-                busNo.setError(null);
+                add_bus_no.setError(null);
                 return true;
             }
         }
@@ -125,13 +163,58 @@ public class add_new_bus extends AppCompatActivity {
         }
 
         public void addBus(View view){
-        String addBusNo = busNo.getEditText().toString();
+        String addBusNo = add_bus_no.getText().toString();
         String endDestinationAdd = endDestination.getText().toString();
 
         try {
             if (!isBusNumberValid() | ! isAddressValid())
             {
                 return;
+            }
+
+            try {
+
+                DocumentReference documentReference = fStore.collection("Bus").document();
+                Map<String,Object> bus = new HashMap<>();
+                bus.put("active_sharing",false);
+                bus.put("bus_id","");
+                bus.put("bus_number",addBusNo);
+                bus.put("current_lat", school_lat);
+                bus.put("current_long",school_long);
+                bus.put("destination",endDestinationAdd);
+                bus.put("destination_lat",user_lat);
+                bus.put("destination_long", user_long);
+                bus.put("going_to_school",false);
+                bus.put("school_id",school_id);
+                bus.put("source",school_address);
+                bus.put("source_lat",school_lat);
+                bus.put("source_long", school_long);
+
+
+                documentReference.set(bus).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid)
+                    {
+
+                        doc_id = documentReference.getId().toString();
+
+                        Map<String,Object> bus_update = new HashMap<>();
+                        bus_update.put("bus_id",doc_id);
+                        fStore.collection("Bus").document(doc_id).update(bus_update);
+                        Toast.makeText(add_new_bus.this, "Bus added successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e)
+                    {
+
+                    }
+                });
+
+            }
+            catch (Exception e){
+                System.out.println(e);
             }
         }
         catch (Exception e)

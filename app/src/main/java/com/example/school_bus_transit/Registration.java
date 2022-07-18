@@ -349,7 +349,7 @@ public class Registration extends AppCompatActivity {
                         user.put("address",addressVal);
                         user.put("user_type", userTypeVal);
                         user.put("user_id",userID);
-                        user.put("bus_id",null);
+                        user.put("bus_id","");
                         user.put("gender",genderVal);
                         user.put("photo_url",photo_url);
                         user.put("user_lat",user_lat);

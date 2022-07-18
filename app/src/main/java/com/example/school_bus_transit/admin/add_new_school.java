@@ -1,5 +1,6 @@
 package com.example.school_bus_transit.admin;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,17 +11,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.school_bus_transit.Login;
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.Registration;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class add_new_school extends AppCompatActivity {
     private final int AUTOCOMPLETE_REQUEST_CODE = 1;
@@ -28,7 +43,12 @@ public class add_new_school extends AppCompatActivity {
     TextInputLayout schoolName, email, phoneNo;
     Button addSchool;
 
-    private String photo_url = null,user_lat,user_long;
+    private String photo_url = null,school_lat,school_long;
+    FirebaseAuth mAuth;
+    FirebaseFirestore fStore;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    String doc_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +61,12 @@ public class add_new_school extends AppCompatActivity {
         address = findViewById(R.id.address);
         phoneNo = findViewById(R.id.phone_no);
         addSchool = findViewById(R.id.add_school);
+
+        //Firebase Object Initialisation
+        mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
 
         //Select Address from autocomplete
@@ -84,8 +110,8 @@ public class add_new_school extends AppCompatActivity {
                     Place place = Autocomplete.getPlaceFromIntent(data);
                     address.setText(place.getAddress());
                     System.out.println("Lat: " + place.getLatLng().latitude + "Long: " +place.getLatLng().longitude);
-                    user_lat = String.valueOf(place.getLatLng().latitude);
-                    user_long = String.valueOf(place.getLatLng().longitude);
+                    school_lat = String.valueOf(place.getLatLng().latitude);
+                    school_long = String.valueOf(place.getLatLng().longitude);
                 } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                     // TODO: Handle the error.
                     Status status = Autocomplete.getStatusFromIntent(data);
@@ -111,7 +137,6 @@ public class add_new_school extends AppCompatActivity {
             return true;
         }
     }
-
     private boolean isEmailValid() {
 
         String emailVal = email.getEditText().getText().toString();
@@ -149,16 +174,51 @@ public class add_new_school extends AppCompatActivity {
         }
     }
 
-    public void addSchool(View view){
-        String addschoolName = schoolName.getEditText().toString();
-        String emailVal = email.getEditText().toString();
+    public void addSchool(View view)
+    {
+        String name = schoolName.getEditText().getText().toString();
+        String email_id = email.getEditText().getText().toString();
         String addressVal = address.getText().toString();
-        String phoneNoVal = phoneNo.getEditText().toString();
+        String phone_no = phoneNo.getEditText().getText().toString();
 
         try {
             if (!isSchoolNameValid() | !isEmailValid() | !isPhoneNoValid() | !isAddressValid()) {
                 return;
             }
+
+            DocumentReference documentReference = fStore.collection("School").document();
+            Map<String,Object> school = new HashMap<>();
+            school.put("name",name);
+            school.put("phone_no",phone_no);
+            school.put("phone_no",phone_no);
+            school.put("school_id","");
+            school.put("email_id", email_id);
+            school.put("address",addressVal);
+            school.put("lat",school_lat);
+            school.put("long",school_long);
+
+
+            documentReference.set(school).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid)
+                {
+
+                    doc_id = documentReference.getId().toString();
+
+                    Map<String,Object> school_update = new HashMap<>();
+                    school_update.put("school_id",doc_id);
+                    fStore.collection("School").document(doc_id).update(school_update);
+                    Toast.makeText(add_new_school.this, "School added Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e)
+                {
+
+                }
+            });
+
         }
         catch (Exception e){
             System.out.println(e);
