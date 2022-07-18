@@ -22,6 +22,8 @@
         <entry key="app/src/main/res/layout/activity_add_new_school.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_admin_dash_board.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_driver_bus_info.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_driver_notification.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_driver_profile.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.3182291666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.14695841471354165" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1609375" />
