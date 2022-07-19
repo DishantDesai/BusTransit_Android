@@ -58,7 +58,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                startActivity(new Intent(Login.this, Registration.class));
-                startActivity(new Intent(Login.this, add_new_bus.class));
+                startActivity(new Intent(Login.this, Registration.class));
             }
         });
 

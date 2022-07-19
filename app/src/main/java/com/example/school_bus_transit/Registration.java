@@ -252,10 +252,23 @@ public class Registration extends AppCompatActivity {
     }
     private Boolean isPhoneNoValid(){
         String phoneVal = phoneNo.getEditText().getText().toString();
-        if(phoneVal.isEmpty()){
+        String phoneValidation = "^" +
+                "\\" +
+                "d{3}-" +
+                "\\" +
+                "d{3}-" +
+                "\\d{4}$";
+        if(phoneVal.isEmpty())
+        {
             phoneNo.setError("Field cannot be empty!");
             return false;
-        }else{
+        }else if(!phoneVal.matches(phoneValidation))
+        {
+            phoneNo.setError("PhoneNo should be in 345-345-3456 formate.");
+            return false;
+        }
+        else
+        {
             phoneNo.setError(null);
             return true;
         }
@@ -273,8 +286,9 @@ public class Registration extends AppCompatActivity {
         if(passwordVal.isEmpty()){
             password.setError("Field cannot be empty!");
             return false;
-        }else if(!passwordVal.matches(passwordPattern)){
-            password.setError("Password is too week");
+        }else if(!passwordVal.matches(passwordPattern))
+        {
+            password.setError("Password should contains capital letters(A-Z),small letter(a-z),numbers(0-9),one special characters.");
             return false;
         }else{
             password.setError(null);
