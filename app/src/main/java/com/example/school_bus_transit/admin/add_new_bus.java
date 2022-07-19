@@ -163,7 +163,7 @@ public class add_new_bus extends AppCompatActivity {
         }
 
         public void addBus(View view){
-        String addBusNo = add_bus_no.getText().toString();
+        int addBusNo = Integer.parseInt(add_bus_no.getText().toString());
         String endDestinationAdd = endDestination.getText().toString();
 
         try {

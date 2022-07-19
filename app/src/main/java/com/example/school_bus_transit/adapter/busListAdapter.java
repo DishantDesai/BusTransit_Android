@@ -1,6 +1,7 @@
 package com.example.school_bus_transit.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.admin.DriverBusInfo;
 import com.example.school_bus_transit.model.BusModel;
 
 import java.io.Serializable;
@@ -54,12 +56,12 @@ public class busListAdapter extends RecyclerView.Adapter<busListAdapter.ViewHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(context, DishDetails.class);
+                Intent intent = new Intent(context, DriverBusInfo.class);
 
 //                intent.putExtra("dish",school.get(position));
 //                intent.putExtra("position",position);
-
-//                context.startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         });
 

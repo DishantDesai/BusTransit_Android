@@ -3,6 +3,10 @@
     package="com.example.school_bus_transit">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusTransit_Android">
         <activity
-            android:name=".DriverBusInfo"
+            android:name=".admin.DriverBusInfo"
             android:exported="false" />
         <activity
             android:name=".admin.add_new_bus"
@@ -47,6 +51,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw"/>
+
+
     </application>
 
 </manifest>
