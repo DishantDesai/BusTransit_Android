@@ -16,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusTransit_Android">
         <activity
+            android:name=".driver.DriverProfile"
+            android:exported="false" />
+        <activity
+            android:name=".driver.DriverNotification"
+            android:exported="false" />
+        <activity
             android:name=".admin.DriverBusInfo"
             android:exported="false" />
         <activity

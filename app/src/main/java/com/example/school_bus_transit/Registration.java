@@ -78,6 +78,7 @@ public class Registration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         getSupportActionBar().hide();
+
         signin = findViewById(R.id.signin);
         fullName = findViewById(R. id.full_name);
         email = findViewById(R.id.email);
@@ -236,6 +237,7 @@ public class Registration extends AppCompatActivity {
             return true;
         }
     }
+
     Boolean isEmailValid(){
         String emailVal= email.getEditText().getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
