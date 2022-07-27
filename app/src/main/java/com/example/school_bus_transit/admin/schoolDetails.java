@@ -18,6 +18,7 @@ import com.example.school_bus_transit.adapter.busListAdapter;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.BusModel;
 import com.example.school_bus_transit.model.SchoolModel;
+import com.example.school_bus_transit.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -93,6 +94,7 @@ public class schoolDetails extends AppCompatActivity implements Serializable
     protected void onResume() {
         super.onResume();
         getBus();
+        getDriver();
     }
 
     public void getBus()
@@ -135,6 +137,47 @@ public class schoolDetails extends AppCompatActivity implements Serializable
                             }
                         }
                 );
+
+    }
+
+    public void getDriver()
+    {
+        FirebaseFirestore.getInstance().collection("User")
+                .whereEqualTo("user_type","DRIVER").get().addOnCompleteListener(
+                        new OnCompleteListener<QuerySnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful())
+                                {
+                                    ArrayList<UserModel> driver = new ArrayList<>();
+                                    for(QueryDocumentSnapshot doc : task.getResult())
+                                    {
+
+                                        driver.add (new UserModel(
+                                                        doc.getData().get("user_id").toString(),
+                                                        doc.getData().get("photo_url").toString(),
+                                                        doc.getData().get("gender").toString(),
+                                                        doc.getData().get("bus_id").toString(),
+                                                        doc.getData().get("fullName").toString(),
+                                                        doc.getData().get("phone_no").toString(),
+                                                        new ArrayList<String>(),
+                                                        doc.getData().get("email_id").toString(),
+                                                        doc.getData().get("address").toString(),
+                                                        doc.getData().get("user_lat").toString(),
+                                                        doc.getData().get("user_long").toString(),
+                                                        doc.getData().get("user_type").toString()
+                                                )
+
+                                        );
+                                    }
+                                    constants.alldriver = driver;
+                                }
+                            }
+                        }
+                );
+
+
 
     }
 

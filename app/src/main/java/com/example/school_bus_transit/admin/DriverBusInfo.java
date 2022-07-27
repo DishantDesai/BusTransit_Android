@@ -1,15 +1,12 @@
 package com.example.school_bus_transit.admin;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.BusModel;
@@ -17,7 +14,6 @@ import com.example.school_bus_transit.model.SchoolModel;
 import com.example.school_bus_transit.model.UserModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -25,22 +21,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallback {
 
@@ -51,12 +41,12 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
     BusModel b;
     SchoolModel s;
     private GoogleMap mMap;
-    FirebaseDatabase firebaseDatabase;
-
-    // creating a variable for our
-    // Database Reference for Firebase.
-    DatabaseReference databaseReference;
     SupportMapFragment mapFragment;
+    Button rDriver;
+    FirebaseAuth mAuth;
+    FirebaseFirestore fStore;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,17 +62,28 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         getActionBar();
         setData();
 
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
-        // below line is used to get
-        // reference for our database.
-        databaseReference = firebaseDatabase.getReference("Bus");
-
-
-        // calling method
-        // for getting data.
         getdata();
+
+        //Firebase Object Initialisation
+        mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        rDriver=findViewById(R.id.relese_driver);
+
+        rDriver.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Map<String,Object> school_update = new HashMap<>();
+                school_update.put("bus_id","");
+                fStore.collection("User").document(d.getuser_id()).update(school_update);
+                finish();
+            }
+        });
+
+
 
     }
 
