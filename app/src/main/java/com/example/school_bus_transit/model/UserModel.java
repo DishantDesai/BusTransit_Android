@@ -46,4 +46,17 @@ public class UserModel {
     public String getUserType() {
         return user_type;
     }
+
+    public String getbus_id() {
+        return bus_id;
+    }
+
+    public String getuser_id() {
+        return user_id;
+    }
+
+    public String getfullName() {
+        return fullName;
+    }
+
 }

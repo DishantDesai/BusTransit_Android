@@ -13,16 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.admin.DriverBusInfo;
+import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.BusModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class busListAdapter extends RecyclerView.Adapter<busListAdapter.ViewHolder> implements Serializable {
-    ArrayList<BusModel> school;
+    ArrayList<BusModel> bus;
     private Context context;
-    public busListAdapter(Context context, ArrayList<BusModel> school) {
-        this.school = school;
+    public busListAdapter(Context context, ArrayList<BusModel> bus) {
+        this.bus = bus;
         this.context = context;
     }
 
@@ -35,15 +36,15 @@ public class busListAdapter extends RecyclerView.Adapter<busListAdapter.ViewHold
 
     public void updateData(ArrayList<BusModel> matchFood)
     {
-        this.school = matchFood;
+        this.bus = matchFood;
         notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder,int position) {
-        holder.no.setText(school.get(position).getbus_number());
+        holder.no.setText(bus.get(position).getbus_number());
 
-        if(school.get(position).getactive_sharing())
+        if(bus.get(position).getactive_sharing())
         {
             holder.status.setText("On");
         }
@@ -51,17 +52,42 @@ public class busListAdapter extends RecyclerView.Adapter<busListAdapter.ViewHold
         {
             holder.status.setText("Off");
         }
-        holder.address.setText(school.get(position).getdestination());
+        holder.address.setText(bus.get(position).getdestination());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DriverBusInfo.class);
 
-//                intent.putExtra("dish",school.get(position));
+                  String driverId = "";
+
+                  for(int i=0;i< constants.alldriver.size(); i++)
+                  {
+                      if(bus.get(position).getbus_id().equals(constants.alldriver.get(i).getbus_id()))
+                      {
+                          driverId = constants.alldriver.get(i).getuser_id();
+                      }
+                  }
+
+                  if(!driverId.equals(""))
+                  {
+                    Intent intent = new Intent(context, DriverBusInfo.class);
+                    intent.putExtra("driver_id",driverId);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                  }
+                  else
+                  {
+
+
+
+                  }
+
+//                Intent intent = new Intent(context, DriverBusInfo.class);
+//                intent.putExtra("driver_id",bus.get(position).);
 //                intent.putExtra("position",position);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
             }
         });
 
@@ -72,7 +98,7 @@ public class busListAdapter extends RecyclerView.Adapter<busListAdapter.ViewHold
     }
     @Override
     public int getItemCount() {
-        return school.size();
+        return bus.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

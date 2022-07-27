@@ -13,7 +13,7 @@
     tools:context=".admin.DriverBusInfo">
 
     <TextView
-        android:id="@+id/admin_school_schoolName"
+        android:id="@+id/admin_school_info_bus_no"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="Bus Number"
@@ -35,7 +35,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/admin_school_schoolName"
+        app:layout_constraintTop_toBottomOf="@+id/admin_school_info_bus_no"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +47,7 @@
             >
 
             <TextView
-                android:id="@+id/school_name"
+                android:id="@+id/school_name_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="School Name"
@@ -61,11 +61,11 @@
                 />
 
             <TextView
-                android:id="@+id/school_phone_no"
+                android:id="@+id/admin_school_info_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+1 514 xxx xxxx"
-                app:layout_constraintTop_toBottomOf="@+id/school_name"
+                app:layout_constraintTop_toBottomOf="@+id/school_name_tag"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 tools:ignore="MissingConstraints"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="School Address"
                 android:paddingTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/school_phone_no"
+                app:layout_constraintTop_toBottomOf="@+id/admin_school_info_name"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 tools:ignore="MissingConstraints"
@@ -99,6 +99,7 @@
                 tools:ignore="MissingConstraints"
                 android:textColor="@color/black"
                 android:textSize="20dp"
+                android:paddingLeft="20dp"
                 />
             <TextView
                 android:id="@+id/school_end_address"
@@ -112,10 +113,11 @@
                 tools:ignore="MissingConstraints"
                 android:textColor="@color/black"
                 android:textSize="30dp"
+
                 android:textStyle="bold"
                 />
             <TextView
-                android:id="@+id/school_end_address_text"
+                android:id="@+id/end_address_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CEGEP de la Gaspesie,Montreal,Qebec"
@@ -153,7 +155,7 @@
                 tools:ignore="MissingConstraints" />
 
             <TextView
-                android:id="@+id/driver_name"
+                android:id="@+id/admin_school_info_driver_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Namri Patil"
@@ -172,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:text="Trip Status"
                 android:paddingTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/driver_name"
+                app:layout_constraintTop_toBottomOf="@+id/admin_school_info_driver_name"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 tools:ignore="MissingConstraints"
@@ -182,7 +184,7 @@
                 />
 
             <TextView
-                android:id="@+id/on_off"
+                android:id="@+id/admin_school_info_on_off"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="On"
@@ -199,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:text="Trip Direction"
                 android:paddingTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/on_off"
+                app:layout_constraintTop_toBottomOf="@+id/admin_school_info_on_off"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 tools:ignore="MissingConstraints"
@@ -243,16 +245,19 @@
 
     </LinearLayout>
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="666dp"
-        app:layout_constraintTop_toBottomOf="@id/driverInfo"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="400dp"
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="NotSibling" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/admin_school_allDetails"
+        tools:context=".DriverBusInfo" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

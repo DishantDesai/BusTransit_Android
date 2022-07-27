@@ -88,8 +88,6 @@ public class adminDashBoard extends AppCompatActivity {
                 }
         );
 
-
-
     }
 
     public void getBus()
