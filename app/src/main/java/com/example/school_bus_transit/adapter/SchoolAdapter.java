@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.admin.schoolDetails;
+import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.SchoolModel;
 
 import java.io.Serializable;
@@ -50,7 +51,7 @@ public class SchoolAdapter extends RecyclerView.Adapter<SchoolAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, schoolDetails.class);
-
+                constants.CurrentSchool=school.get(position);
                 intent.putExtra("school_id",school.get(position).getschool_id());
                 intent.putExtra("position",position);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

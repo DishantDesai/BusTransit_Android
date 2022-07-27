@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.admin.DriverBusInfo;
+import com.example.school_bus_transit.admin.admin_assign_driver;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.BusModel;
 
@@ -77,9 +78,10 @@ public class busListAdapter extends RecyclerView.Adapter<busListAdapter.ViewHold
                   }
                   else
                   {
-
-
-
+                      constants.CurrentBus = bus.get(position);
+                      Intent intent = new Intent(context, admin_assign_driver.class);
+                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                      context.startActivity(intent);
                   }
 
 //                Intent intent = new Intent(context, DriverBusInfo.class);

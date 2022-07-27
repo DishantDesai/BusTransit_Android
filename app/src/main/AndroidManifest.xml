@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusTransit_Android">
         <activity
+            android:name=".admin.admin_assign_driver"
+            android:exported="false" />
+        <activity
             android:name=".driver.DriverProfile"
             android:exported="false" />
         <activity
@@ -61,11 +64,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw"/>
-
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw" />
     </application>
 
 </manifest>
