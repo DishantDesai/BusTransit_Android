@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusTransit_Android">
         <activity
+            android:name=".driver.driver_not_allowed_screen"
+            android:exported="false" />
+        <activity
             android:name=".admin.admin_assign_driver"
             android:exported="false" />
         <activity
