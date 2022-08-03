@@ -8,8 +8,7 @@
     android:paddingBottom="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="3dp"
-    android:layout_marginBottom="16dp"
-    >
+    android:layout_marginBottom="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +16,7 @@
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         tools:ignore="MissingConstraints"
-        android:background="@drawable/shapeyellow"
-        >
+        android:background="@drawable/shapeyellow">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="100dp"
@@ -28,8 +26,7 @@
             android:id="@+id/goToSchool"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            >
+            android:layout_marginLeft="10dp">
 
             <TextView
                 android:id="@+id/admin_school_bus_no"
@@ -42,82 +39,78 @@
                 tools:ignore="MissingConstraints"
                 android:textColor="@color/black"
                 android:textSize="30dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginRight="20dp"
-        tools:ignore="MissingConstraints"
-        >
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center_horizontal"
             android:layout_marginRight="20dp"
-            tools:ignore="MissingConstraints" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginRight="10dp"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="Trip : "
-            android:id="@+id/schoolName"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:textColor="@color/black"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            />
+            tools:ignore="MissingConstraints">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginRight="20dp"
+                tools:ignore="MissingConstraints">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginRight="10dp"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="Trip : "
+                    android:id="@+id/schoolName"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginRight="10dp"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="On"
+                    android:id="@+id/admin_school_bus_status"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="30dp" />
+
+
+            </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginRight="10dp"
                 app:layout_constraintTop_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="On"
-                android:id="@+id/admin_school_bus_status"
+                android:text="Montreal,Quebec"
+                android:id="@+id/admin_school_bus_address"
                 android:paddingTop="10dp"
                 android:paddingRight="10dp"
                 android:textColor="@color/black"
-                android:textSize="30dp"
-                />
-
-
+                android:textSize="20dp"
+                android:paddingBottom="10dp" />
+        </LinearLayout>
     </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginRight="10dp"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="Montreal,Quebec"
-            android:id="@+id/admin_school_bus_address"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:paddingBottom="10dp"
-            />
-    </LinearLayout>
-    </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

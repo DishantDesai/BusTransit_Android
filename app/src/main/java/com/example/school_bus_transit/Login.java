@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.school_bus_transit.admin.adminDashBoard;
 import com.example.school_bus_transit.driver.DriverNotification;
 import com.example.school_bus_transit.driver.DriverProfile;
+import com.example.school_bus_transit.driver.driver_not_allowed_screen;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -116,7 +117,7 @@ public class Login extends AppCompatActivity {
     private void userRedirect(){
         FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
-        FirebaseFirestore.getInstance().collection("User").whereEqualTo("user_id",user.getEmail())
+        FirebaseFirestore.getInstance().collection("User").whereEqualTo("user_id",user.getUid())
                 .get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>()
                 {
@@ -147,7 +148,15 @@ public class Login extends AppCompatActivity {
                             }
                             if(constants.CurrentUser.getUserType().equalsIgnoreCase(constants.DRIVER))
                             {
-                                startActivity(new Intent(Login.this, HomeScreen.class));
+                                if(constants.CurrentUser.getbus_id().equals(""))
+                                {
+                                    startActivity(new Intent(Login.this, driver_not_allowed_screen.class));
+                                }
+                                else
+                                {
+                                    startActivity(new Intent(Login.this, HomeScreen.class));
+
+                                }
                             }
                             else
                             {

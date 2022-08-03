@@ -24,8 +24,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:id="@+id/allNumber"
-        android:visibility="invisible"
-        >
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,8 +32,7 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            >
+            android:layout_marginLeft="20dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="150dp"
@@ -57,8 +55,7 @@
                     tools:ignore="MissingConstraints"
                     android:textColor="@color/black"
                     android:textSize="30dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/school"
@@ -72,16 +69,14 @@
                     tools:ignore="MissingConstraints"
                     android:textColor="@color/black"
                     android:textSize="20dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shapeyellow"
-                android:id="@+id/goToBus"
-                >
+                android:id="@+id/goToBus">
 
                 <TextView
                     android:id="@+id/busNo"
@@ -95,8 +90,7 @@
                     tools:ignore="MissingConstraints"
                     android:textColor="@color/black"
                     android:textSize="30dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/bus"
@@ -122,8 +116,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:id="@+id/goToDriver"
-            >
+            android:id="@+id/goToDriver">
 
             <TextView
                 android:id="@+id/Driver"
@@ -137,8 +130,8 @@
                 tools:ignore="MissingConstraints"
                 android:textColor="@color/black"
                 android:textSize="30dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/driverNo"
                 android:layout_width="wrap_content"
@@ -151,8 +144,7 @@
                 tools:ignore="MissingConstraints"
                 android:textColor="@color/black"
                 android:textSize="30dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

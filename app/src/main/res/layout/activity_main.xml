@@ -11,14 +11,15 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradiant_background"
         android:orientation="vertical"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:lottie_url="https://assets1.lottiefiles.com/packages/lf20_go2cnngc.json"
             app:lottie_autoPlay="true"
-            app:lottie_loop="true"/>
+            app:lottie_loop="true" />
+
         <TextView
             android:id="@+id/app_name"
             android:layout_width="wrap_content"
@@ -29,8 +30,7 @@
             android:textSize="30dp"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="65dp"
-            />
+            android:layout_marginBottom="65dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
