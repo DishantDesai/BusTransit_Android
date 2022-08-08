@@ -30,12 +30,16 @@
         <entry key="app/src/main/res/layout/activity_add_new_bus.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/layout/activity_admin_assign_driver.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/layout/activity_admin_dash_board.xml" value="0.15520833333333334" />
+        <entry key="app/src/main/res/layout/activity_driver_bus_info.xml" value="0.2513586956521739" />
+        <entry key="app/src/main/res/layout/activity_driver_home_screen.xml" value="0.2513586956521739" />
         <entry key="app/src/main/res/layout/activity_driver_not_allowed_screen.xml" value="0.15520833333333334" />
+        <entry key="app/src/main/res/layout/activity_driver_notification.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.3182291666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.14695841471354165" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1609375" />
         <entry key="app/src/main/res/layout/activity_registration.xml" value="0.23052651009908537" />
         <entry key="app/src/main/res/layout/activity_school_details.xml" value="0.19519927536231885" />
+        <entry key="app/src/main/res/layout/sampledriverassign.xml" value="0.2513586956521739" />
         <entry key="app/src/main/res/menu/app_bar_add_bus_menu.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/menu/app_bar_user_icon.xml" value="0.15520833333333334" />
       </map>
