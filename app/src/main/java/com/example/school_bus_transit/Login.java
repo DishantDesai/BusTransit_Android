@@ -15,21 +15,17 @@ import android.widget.Toast;
 
 import com.example.school_bus_transit.admin.adminDashBoard;
 import com.example.school_bus_transit.driver.DriverHomeScreen;
-import com.example.school_bus_transit.driver.DriverNotification;
-import com.example.school_bus_transit.driver.DriverProfile;
 import com.example.school_bus_transit.driver.driver_not_allowed_screen;
 import com.example.school_bus_transit.helper.FirebaseHelper;
 import com.example.school_bus_transit.helper.constants;
-import com.example.school_bus_transit.model.BusModel;
-import com.example.school_bus_transit.model.Notification;
 import com.example.school_bus_transit.model.UserModel;
+import com.example.school_bus_transit.parents.ParentHomeScreen;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -156,6 +152,7 @@ public class Login extends AppCompatActivity {
                                 );
 
                             }
+
                             if(constants.CurrentUser.getUserType().equalsIgnoreCase(constants.DRIVER))
                             {
                                 if(constants.CurrentUser.getbus_id().equals(""))
@@ -173,7 +170,7 @@ public class Login extends AppCompatActivity {
                             }
                             else
                             {
-                                startActivity(new Intent(Login.this, HomeScreen.class));
+                                startActivity(new Intent(Login.this, ParentHomeScreen.class));
                             }
                             Toast.makeText(Login.this, "User logged in successfully", Toast.LENGTH_SHORT).show();
                             finish();

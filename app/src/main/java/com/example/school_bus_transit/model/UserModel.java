@@ -59,4 +59,16 @@ public class UserModel {
         return fullName;
     }
 
+    public String getphone_no() {
+        return phone_no;
+    }
+
+    public String getphoto_url() {
+        return photo_url;
+    }
+
+    public List<String> getschool_id() {
+        return school_id;
+    }
+
 }
