@@ -6,11 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.example.school_bus_transit.Login;
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.Registration;
 import com.example.school_bus_transit.adapter.busListAdapter;
 import com.example.school_bus_transit.adapter.parentHomeScreenAdapter;
 import com.example.school_bus_transit.helper.constants;
@@ -20,6 +24,7 @@ import com.example.school_bus_transit.model.UserModel;
 import com.example.school_bus_transit.model.parentScreenModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,6 +36,7 @@ public class ParentHomeScreen extends AppCompatActivity {
     Context context;
     RecyclerView recyclerViewBusList;
     private RecyclerView.Adapter busAdapter;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,6 +44,12 @@ public class ParentHomeScreen extends AppCompatActivity {
         context = getApplicationContext();
 
         super.onCreate(savedInstanceState);
+
+
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
+
         setContentView(R.layout.activity_parent_home_screen);
         getSupportActionBar().hide();
 
@@ -55,6 +67,23 @@ public class ParentHomeScreen extends AppCompatActivity {
 
     }
 
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.bottom_profile:
+//                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
+                return true;
+
+            case R.id.bottom_home:
+//                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
+                return true;
+
+            case R.id.bottom_notification:
+//                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
+                return true;
+        }
+        return false;
+    }
 
     public void getParentData(List<String> school_id)
     {
@@ -134,7 +163,7 @@ public class ParentHomeScreen extends AppCompatActivity {
                                         {
                                             if(bus.get(i).getbus_id().equals(driver.get(j).getbus_id()))
                                             {
-                                                parentScreendata.add (new parentScreenModel(
+                                                parentScreendata.add(new parentScreenModel(
                                                                 driver.get(j).getfullName(),
                                                                 driver.get(j).getphone_no(),
                                                                 driver.get(j).getbus_id(),
