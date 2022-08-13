@@ -1,6 +1,7 @@
 package com.example.school_bus_transit.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.admin.DriverBusInfo;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.parentScreenModel;
 import com.example.school_bus_transit.model.parentScreenModel;
+import com.example.school_bus_transit.parents.busTrack;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -71,7 +74,10 @@ public class parentHomeScreenAdapter extends RecyclerView.Adapter<parentHomeScre
             @Override
             public void onClick(View v)
             {
-                Toast.makeText(context, "on click  "+position , Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, busTrack.class);
+                intent.putExtra("bus_id",parentScreendata.get(position).getbus_id());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         });
         

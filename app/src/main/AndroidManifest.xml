@@ -27,6 +27,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusTransit_Android">
         <activity
+            android:name=".parents.busTrack"
+            android:exported="false" />
+        <activity
             android:name=".parents.ParentHomeScreen"
             android:exported="false" />
         <activity
