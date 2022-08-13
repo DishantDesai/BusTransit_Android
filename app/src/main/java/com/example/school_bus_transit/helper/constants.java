@@ -6,6 +6,7 @@ import com.example.school_bus_transit.model.UserModel;
 import com.example.school_bus_transit.model.parentScreenModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class constants {
@@ -18,4 +19,5 @@ public class constants {
     public static List<UserModel> alldriver=new ArrayList<>();
     public static List<BusModel> allbus=new ArrayList<>();
     public static List<parentScreenModel> parentScreendata=new ArrayList<>();
+    public static List<List<HashMap<String, String>>> routes = new ArrayList<List<HashMap<String,String>>>() ;
 }

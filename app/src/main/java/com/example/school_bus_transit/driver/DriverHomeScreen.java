@@ -3,6 +3,7 @@ package com.example.school_bus_transit.driver;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.example.school_bus_transit.helper.FirebaseHelper;
 import com.example.school_bus_transit.helper.GPSTracker;
 import com.example.school_bus_transit.helper.LocationGetter;
 import com.example.school_bus_transit.helper.constants;
+import com.example.school_bus_transit.helper.fetchRoute;
 import com.example.school_bus_transit.model.BusModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +25,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,6 +77,14 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void LocationChangeListner(double latitude, double longitude) {
                 LocationChange(latitude,longitude);
+
+                if(constants.CurrentBus!=null)
+                {
+                    fetchRoute myAsyncTasks = new fetchRoute();
+                    myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
+
+                    onMapReady(mMap);
+                }
             }
         });
 
@@ -105,6 +117,16 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
 
     }
 
+    String getMapsApiDirectionsUrl() {
+        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
+        String str_dest = "destination=" + constants.CurrentBus.getdestination_lat() + "," + constants.CurrentBus.getdestination_long();
+        String sensor = "sensor=false";
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true"
+                +"&key="+"AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw";
+        String output = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+        return url;
+    }
     public void LocationChange(double latitude, double longitude)
     {
 
@@ -212,20 +234,24 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
             mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
 
 //       find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
-//        PolylineOptions routeCoordinates = new PolylineOptions();
-//        for (LatLng latLng : mCoordinates) {
-//            routeCoordinates.add(new LatLng(latLng.latitude, latLng.longitude));
-//        }
-//        routeCoordinates.width(5);
-//        routeCoordinates.color(Color.RED);
-//        Polyline route  = mMap.addPolyline(routeCoordinates);
+            PolylineOptions routeCoordinates = new PolylineOptions();
+
+            if(constants.routes.size()!=0)
+            {
+                for (HashMap<String, String> latLng : constants.routes.get(0)) {
+                    routeCoordinates.add(new LatLng(Double.parseDouble(latLng.get("lat")), Double.parseDouble(latLng.get("lng"))));
+                }
+                routeCoordinates.width(10);
+                routeCoordinates.color(Color.BLUE);
+                Polyline route = mMap.addPolyline(routeCoordinates);
+            }
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 25));
             mMap.animateCamera(CameraUpdateFactory.zoomIn());
             mMap.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(des)      // Sets the center of the map to Mountain View
+                    .target(curr)      // Sets the center of the map to Mountain View
                     .zoom(15)                   // Sets the zoom
                     .bearing(90)                // Sets the orientation of the camera to east
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
@@ -240,15 +266,6 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
 
     }
 
-    private String getMapsApiDirectionsUrl() {
-        String str_origin = "origin=" + constants.CurrentBus.getsource_lat() + "," + constants.CurrentBus.getsource_long();
-        String str_dest = "destination=" + constants.CurrentBus.getdestination_lat() + "," + constants.CurrentBus.getdestination_long();
-        String sensor = "sensor=false";
-        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true";
-        String output = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-        return url;
-    }
 
     public void getdata()
     {

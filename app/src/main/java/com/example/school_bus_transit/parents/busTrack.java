@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.helper.constants;
+import com.example.school_bus_transit.helper.fetchRoute;
 import com.example.school_bus_transit.model.BusModel;
 import com.example.school_bus_transit.model.SchoolModel;
 import com.example.school_bus_transit.model.UserModel;
@@ -21,6 +23,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +35,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
 
 public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -56,6 +62,17 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         getdata();
+    }
+
+    String getMapsApiDirectionsUrl() {
+        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
+        String str_dest = "destination=" + constants.CurrentBus.getdestination_lat() + "," + constants.CurrentBus.getdestination_long();
+        String sensor = "sensor=false";
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true"
+                +"&key="+"AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw";
+        String output = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+        return url;
     }
 
     public void onMapReady(GoogleMap googleMap) {
@@ -85,13 +102,17 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
             mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
 
 //       find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
-//        PolylineOptions routeCoordinates = new PolylineOptions();
-//        for (LatLng latLng : mCoordinates) {
-//            routeCoordinates.add(new LatLng(latLng.latitude, latLng.longitude));
-//        }
-//        routeCoordinates.width(5);
-//        routeCoordinates.color(Color.RED);
-//        Polyline route  = mMap.addPolyline(routeCoordinates);
+            PolylineOptions routeCoordinates = new PolylineOptions();
+
+            if(constants.routes.size()!=0)
+            {
+                for (HashMap<String, String> latLng : constants.routes.get(0)) {
+                    routeCoordinates.add(new LatLng(Double.parseDouble(latLng.get("lat")), Double.parseDouble(latLng.get("lng"))));
+                }
+                routeCoordinates.width(10);
+                routeCoordinates.color(Color.BLUE);
+                Polyline route = mMap.addPolyline(routeCoordinates);
+            }
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 25));
             mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -143,8 +164,12 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
                                     doc.getData().get("source_long").toString()
                             );
 
-                            onMapReady(mMap);
+
                         }
+
+                        fetchRoute myAsyncTasks = new fetchRoute();
+                        myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
+                        onMapReady(mMap);
                     }
                 });
 

@@ -1,17 +1,26 @@
 package com.example.school_bus_transit.admin;
 
+import static com.google.android.gms.tasks.Tasks.await;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.helper.DirectionsJSONParser;
 import com.example.school_bus_transit.helper.constants;
+import com.example.school_bus_transit.helper.fetchRoute;
 import com.example.school_bus_transit.model.BusModel;
 import com.example.school_bus_transit.model.SchoolModel;
 import com.example.school_bus_transit.model.UserModel;
+import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,6 +30,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -29,7 +40,17 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallback {
@@ -40,13 +61,14 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
     UserModel d;
     BusModel b;
     SchoolModel s;
-    private GoogleMap mMap;
+    GoogleMap mMap;
     SupportMapFragment mapFragment;
     Button rDriver;
     FirebaseAuth mAuth;
     FirebaseFirestore fStore;
     FirebaseStorage storage;
     StorageReference storageReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +85,8 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         setData();
 
         getdata();
+
+
 
         //Firebase Object Initialisation
         mAuth = FirebaseAuth.getInstance();
@@ -146,6 +170,7 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         endAddress.setText(b.getdestination());
         busno.setText("Bus Number : "+b.getbus_number());
 
+
     }
 
     public void onMapReady(GoogleMap googleMap) {
@@ -164,13 +189,17 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to "+b.getdestination()));
 
 //       find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
-//        PolylineOptions routeCoordinates = new PolylineOptions();
-//        for (LatLng latLng : mCoordinates) {
-//            routeCoordinates.add(new LatLng(latLng.latitude, latLng.longitude));
-//        }
-//        routeCoordinates.width(5);
-//        routeCoordinates.color(Color.RED);
-//        Polyline route  = mMap.addPolyline(routeCoordinates);
+        PolylineOptions routeCoordinates = new PolylineOptions();
+
+        if(constants.routes.size()!=0)
+        {
+            for (HashMap<String, String> latLng : constants.routes.get(0)) {
+                routeCoordinates.add(new LatLng(Double.parseDouble(latLng.get("lat")), Double.parseDouble(latLng.get("lng"))));
+            }
+            routeCoordinates.width(10);
+            routeCoordinates.color(Color.BLUE);
+            Polyline route = mMap.addPolyline(routeCoordinates);
+        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 25));
@@ -184,15 +213,14 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                 .build();                   // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-
-
     }
 
     private String getMapsApiDirectionsUrl() {
         String str_origin = "origin=" + b.getsource_lat() + "," + b.getsource_long();
         String str_dest = "destination=" + b.getdestination_lat() + "," + b.getdestination_long();
         String sensor = "sensor=false";
-        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true";
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true"
+                +"&key="+"AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw";
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
@@ -228,8 +256,13 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                             );
                             constants.allbus.add(b);
 
+                            fetchRoute myAsyncTasks = new fetchRoute();
+                            myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
+
                             onMapReady(mMap);
+
                         }
+
                     }
                 });
 
