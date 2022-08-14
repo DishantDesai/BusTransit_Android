@@ -2,7 +2,7 @@ package com.example.school_bus_transit.model;
 
 import java.util.Date;
 
-public class Notification {
+public class NotificationModel {
 
     private String notification_id;
     private String bus_id;
@@ -12,7 +12,7 @@ public class Notification {
     private String message;
     private Date timestamp;
 
-    public Notification(String notification_id, String bus_id, String driver_id, String school_id, String title, String message, Date timestamp) {
+    public NotificationModel(String notification_id, String bus_id, String driver_id, String school_id, String title, String message, Date timestamp) {
         this.notification_id = notification_id;
         this.bus_id = bus_id;
         this.driver_id = driver_id;

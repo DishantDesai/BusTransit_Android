@@ -4,54 +4,37 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.1875" />
-        <entry key="../../../../layout/custom_preview.xml" value="0.12080335731414868" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable-anydpi/add_school.xml" value="0.1435" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/gradiant_background.xml" value="0.158" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shape.xml" value="0.158" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapeGreen.xml" value="0.158" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapeYellow.xml" value="0.158" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapegreen.xml" value="0.218" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/drawable/shapeyellow.xml" value="0.158" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_add_new_bus.xml" value="0.22644927536231885" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_add_new_school.xml" value="0.22644927536231885" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_admin_dash_board.xml" value="0.22826086956521738" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_driver_bus_info.xml" value="0.22644927536231885" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_home_screen.xml" value="0.22826086956521738" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_login.xml" value="0.22826086956521738" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_registration.xml" value="0.22826086956521738" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_school_details.xml" value="0.22146739130434784" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/activity_view_all_schools.xml" value="0.22826086956521738" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/samplebusdata.xml" value="0.22146739130434784" />
         <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/layout/sampleschooldata.xml" value="0.22826086956521738" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/menu/app_bar_add_bus_menu.xml" value="0.25416666666666665" />
-        <entry key="..\:/cegep/final_year_project/BusTransit_Android/app/src/main/res/menu/top_app_bar_menu.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/gradiant_backgrounf.xml" value="0.1835" />
         <entry key="app/src/main/res/drawable/image_background.xml" value="0.1065" />
-        <entry key="app/src/main/res/layout/activity_add_new_bus.xml" value="0.15520833333333334" />
-        <entry key="app/src/main/res/layout/activity_admin_assign_driver.xml" value="0.15520833333333334" />
-        <entry key="app/src/main/res/layout/activity_admin_dash_board.xml" value="0.15520833333333334" />
-        <entry key="app/src/main/res/layout/activity_bus_track.xml" value="0.182518115942029" />
-        <entry key="app/src/main/res/layout/activity_driver_bus_info.xml" value="0.2513586956521739" />
-        <entry key="app/src/main/res/layout/activity_driver_home_screen.xml" value="0.2513586956521739" />
-        <entry key="app/src/main/res/layout/activity_driver_not_allowed_screen.xml" value="0.15520833333333334" />
-        <entry key="app/src/main/res/layout/activity_driver_notification.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/activity_add_new_bus.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_add_new_school.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_admin_dash_board.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_driver_bus_info.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_driver_notification.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_driver_profile.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.3182291666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.14695841471354165" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1609375" />
-        <entry key="app/src/main/res/layout/activity_parent_home_screen.xml" value="0.182518115942029" />
-        <entry key="app/src/main/res/layout/activity_parent_notification.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/activity_parent_driver_profile.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_parent_home_screen.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_parent_notification.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_parent_profile.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/layout/activity_registration.xml" value="0.23052651009908537" />
-        <entry key="app/src/main/res/layout/activity_school_details.xml" value="0.19519927536231885" />
-        <entry key="app/src/main/res/layout/parentNotificationSample.xml" value="0.19610507246376813" />
-        <entry key="app/src/main/res/layout/sampleParentHome.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/sample_parent_home.xml" value="0.1854339599609375" />
-        <entry key="app/src/main/res/layout/samplebusdata.xml" value="0.182518115942029" />
-        <entry key="app/src/main/res/layout/sampledriverassign.xml" value="0.2513586956521739" />
-        <entry key="app/src/main/res/layout/sampleschooldata.xml" value="0.182518115942029" />
-        <entry key="app/src/main/res/menu/app_bar_add_bus_menu.xml" value="0.15520833333333334" />
-        <entry key="app/src/main/res/menu/app_bar_user_icon.xml" value="0.15520833333333334" />
-        <entry key="app/src/main/res/menu/bottom_bar.xml" value="0.24583333333333332" />
+        <entry key="app/src/main/res/layout/activity_school_details.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/activity_view_all_schools.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/layout/parent_notification_sample.xml" value="0.25833333333333336" />
       </map>
     </option>
   </component>

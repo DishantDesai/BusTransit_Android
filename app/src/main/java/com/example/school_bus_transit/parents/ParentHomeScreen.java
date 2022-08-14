@@ -32,44 +32,43 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParentHomeScreen extends AppCompatActivity {
+public class ParentHomeScreen extends AppCompatActivity{
 
     Context context;
     RecyclerView recyclerViewBusList;
     private RecyclerView.Adapter busAdapter;
     BottomNavigationView bottomNavigationView;
 
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.bottom_profile:
+    void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.bottom_profile:
 //                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
-                return true;
+                        return true;
 
-            case R.id.bottom_home:
+                    case R.id.bottom_home:
 //                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
-                return true;
+                        return true;
 
-            case R.id.bottom_notification:
+                    case R.id.bottom_notification:
 //                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
-                return true;
-        }
-        return false;
+                        return true;
+                }
+                return false;
+            }
+        });
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         context = getApplicationContext();
-
+//        setupBottomNavigation();
         super.onCreate(savedInstanceState);
 
-
-
-//        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-//        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
-//        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
         setContentView(R.layout.activity_parent_home_screen);
         getSupportActionBar().hide();
 
@@ -84,6 +83,7 @@ public class ParentHomeScreen extends AppCompatActivity {
         }
 
         getParentData(school_id);
+
 
     }
 
@@ -193,7 +193,7 @@ public class ParentHomeScreen extends AppCompatActivity {
                                         recyclerViewBusList.setAdapter(busAdapter);
                                         recyclerViewBusList.setVisibility(View.VISIBLE);
                                     }
-
+//                                    startActivity(new Intent(ParentHomeScreen.this, ParentNotification.class));
                                 }
                             }
                         }

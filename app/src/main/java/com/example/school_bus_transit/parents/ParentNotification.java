@@ -1,25 +1,23 @@
 package com.example.school_bus_transit.parents;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.school_bus_transit.R;
-import com.example.school_bus_transit.adapter.parentHomeScreenAdapter;
 import com.example.school_bus_transit.adapter.parentNotificationAdapter;
-import com.example.school_bus_transit.helper.constants;
-import com.example.school_bus_transit.model.Notification;
-import com.example.school_bus_transit.model.SchoolModel;
-import com.example.school_bus_transit.model.parentScreenModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.school_bus_transit.model.NotificationModel;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ import java.util.Date;
 public class ParentNotification extends AppCompatActivity {
 
     Context context;
-    ArrayList<Notification> notificationData;
+    ArrayList<NotificationModel> notificationModelData =new ArrayList<>();
     RecyclerView recyclerViewNotificationList;
     private RecyclerView.Adapter notificationAdapter;
 
@@ -37,49 +35,67 @@ public class ParentNotification extends AppCompatActivity {
     {
         context = getApplicationContext();
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_parent_notification);
+        getNotification();
     }
 
     public void getNotification()
     {
 
-        FirebaseFirestore.getInstance().collection("Notification")
-                .get().addOnCompleteListener(
-                        new OnCompleteListener<QuerySnapshot>()
+
+        FirebaseFirestore.getInstance().collection("Notification").addSnapshotListener(
+                new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        notificationModelData.clear();
+
+
+//                        String tittle="aa";
+//                        String subject="aaaaa";
+//                        String body="abc";
+//
+//                        NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+//                        Notification notify=new Notification.Builder
+//                                (getApplicationContext()).setContentTitle(tittle).setContentText(body).
+//                                setContentTitle(subject).setSmallIcon(R.drawable.add_bus).build();
+//
+//                        notify.flags |= Notification.FLAG_AUTO_CANCEL;
+//                        notif.notify(0, notify);
+
+
+
+                        for(DocumentSnapshot doc : value.getDocuments())
                         {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful())
-                                {
+                            com.google.firebase.Timestamp t= (com.google.firebase.Timestamp) doc.getData().get("timestamp");
+                            Date d = t.toDate();
+                            notificationModelData.add (new NotificationModel(doc.getData().get("notification_id").toString(),
+                                            doc.getData().get("bus_id").toString(),
+                                            doc.getData().get("driver_id").toString(),
+                                            doc.getData().get("school_id").toString(),
+                                            doc.getData().get("title").toString(),
+                                            doc.getData().get("message").toString(),
+                                            d
+                                    )
 
-                                    for(QueryDocumentSnapshot doc : task.getResult())
-                                    {
-                                        notificationData.add (new Notification(doc.getData().get("notification_id").toString(),
-                                                        doc.getData().get("bus_id").toString(),
-                                                        doc.getData().get("driver_id").toString(),
-                                                        doc.getData().get("school_id").toString(),
-                                                        doc.getData().get("title").toString(),
-                                                        doc.getData().get("message").toString(),
-                                                        (Date) doc.getData().get("timestamp")
-                                                )
+                            );
 
-                                        );
-                                    }
-
-                                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
-                                    recyclerViewNotificationList =  findViewById(R.id.ParentNotification_recycle_view);
-
-                                    if(notificationData.size()!=0)
-                                    {
-                                        recyclerViewNotificationList.setLayoutManager(linearLayoutManager);
-                                        notificationAdapter = new parentNotificationAdapter(context, (ArrayList<Notification>) notificationData);
-                                        recyclerViewNotificationList.setAdapter(notificationAdapter);
-                                        recyclerViewNotificationList.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            }
                         }
-                );
+
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+                        recyclerViewNotificationList =  findViewById(R.id.ParentNotification_recycle_view);
+
+                        if(notificationModelData.size()!=0)
+                        {
+                            recyclerViewNotificationList.setLayoutManager(linearLayoutManager);
+                            notificationAdapter = new parentNotificationAdapter(context, (ArrayList<NotificationModel>) notificationModelData);
+                            recyclerViewNotificationList.setAdapter(notificationAdapter);
+                            recyclerViewNotificationList.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                });
+
 
     }
 }

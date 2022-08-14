@@ -1,31 +1,27 @@
 package com.example.school_bus_transit.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.Notification;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.school_bus_transit.R;
-import com.example.school_bus_transit.admin.schoolDetails;
-import com.example.school_bus_transit.helper.constants;
-import com.example.school_bus_transit.model.Notification;
-import com.example.school_bus_transit.model.SchoolModel;
+import com.example.school_bus_transit.model.NotificationModel;
 
 import java.util.ArrayList;
 
 public class parentNotificationAdapter extends RecyclerView.Adapter<parentNotificationAdapter.ViewHolder>
 {
 
-    ArrayList<Notification> notificationModel;
+    ArrayList<NotificationModel> notificationModel;
     private Context context;
 
-    public parentNotificationAdapter(Context context, ArrayList<Notification> notificationModel) {
+    public parentNotificationAdapter(Context context, ArrayList<NotificationModel> notificationModel) {
         this.notificationModel = notificationModel;
         this.context = context;
     }
@@ -38,7 +34,7 @@ public class parentNotificationAdapter extends RecyclerView.Adapter<parentNotifi
         return new ViewHolder (inflate);
     }
 
-    public void updateData(ArrayList<Notification> notificationModel)
+    public void updateData(ArrayList<NotificationModel> notificationModel)
     {
         this.notificationModel = notificationModel;
         notifyDataSetChanged();
@@ -51,7 +47,7 @@ public class parentNotificationAdapter extends RecyclerView.Adapter<parentNotifi
         holder.title.setText("Notification "+no);
         holder.issue_heading.setText(notificationModel.get(position).getTitle().toString());
         holder.issue_data.setText(notificationModel.get(position).getMessage().toString());
-
+        holder.time.setText(notificationModel.get(position).getTimestamp().toString());
     }
     @Override
     public int getItemCount() {
@@ -59,10 +55,12 @@ public class parentNotificationAdapter extends RecyclerView.Adapter<parentNotifi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title,issue_heading,issue_data;
+        TextView title,issue_heading,issue_data,time;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            time= itemView.findViewById(R.id.notification_time);
             title = itemView.findViewById(R.id.notification_no);
             issue_heading = itemView.findViewById(R.id.notification_issue);
             issue_data = itemView.findViewById(R.id.notification_data);
