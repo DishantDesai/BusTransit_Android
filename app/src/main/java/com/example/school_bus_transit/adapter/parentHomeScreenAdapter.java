@@ -77,6 +77,15 @@ public class parentHomeScreenAdapter extends RecyclerView.Adapter<parentHomeScre
                 Intent intent = new Intent(context, busTrack.class);
                 intent.putExtra("bus_id",parentScreendata.get(position).getbus_id());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                constants.CurrentSelectedDriver = null;
+
+                for(int i=0;i<constants.alldriver.size();i++)
+                {
+                    if(parentScreendata.get(position).getbus_id().equals(constants.alldriver.get(i).getbus_id()))
+                    {
+                        constants.CurrentSelectedDriver = constants.alldriver.get(i);
+                    }
+                }
                 context.startActivity(intent);
             }
         });

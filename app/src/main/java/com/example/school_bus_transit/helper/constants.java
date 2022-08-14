@@ -12,7 +12,7 @@ import java.util.List;
 public class constants {
     public final static String DRIVER = "driver";
     public final static String PARENT = "parent";
-    public static UserModel CurrentUser;
+    public static UserModel CurrentUser,CurrentSelectedDriver;
     public static BusModel CurrentBus;
     public static SchoolModel CurrentSchool;
     public static List<SchoolModel> allschool=new ArrayList<>();

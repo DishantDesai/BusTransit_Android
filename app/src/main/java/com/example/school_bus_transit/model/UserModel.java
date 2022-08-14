@@ -54,6 +54,9 @@ public class UserModel {
     public String getuser_id() {
         return user_id;
     }
+    public String getgender() {
+        return gender;
+    }
 
     public String getfullName() {
         return fullName;
@@ -65,6 +68,20 @@ public class UserModel {
 
     public String getphoto_url() {
         return photo_url;
+    }
+    public String getemail_id() {
+        return email_id;
+    }
+
+    public String getuser_lat() {
+        return user_lat;
+    }
+    public String getuser_long() {
+        return user_long;
+    }
+
+    public String getaddress() {
+        return address;
     }
 
     public List<String> getschool_id() {

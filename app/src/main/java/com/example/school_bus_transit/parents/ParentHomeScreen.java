@@ -160,6 +160,7 @@ public class ParentHomeScreen extends AppCompatActivity{
 
                                         );
                                     }
+                                    constants.alldriver = driver;
                                     for(int i=0;i<bus.size();i++)
                                     {
                                         for(int j=0;j<driver.size();j++)
@@ -193,7 +194,7 @@ public class ParentHomeScreen extends AppCompatActivity{
                                         recyclerViewBusList.setAdapter(busAdapter);
                                         recyclerViewBusList.setVisibility(View.VISIBLE);
                                     }
-//                                    startActivity(new Intent(ParentHomeScreen.this, ParentNotification.class));
+//                                    startActivity(new Intent(ParentHomeScreen.this, parentProfile.class));
                                 }
                             }
                         }

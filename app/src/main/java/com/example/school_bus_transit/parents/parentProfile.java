@@ -1,10 +1,14 @@
 package com.example.school_bus_transit.parents;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,20 +16,40 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.Registration;
 import com.example.school_bus_transit.driver.DriverProfile;
+import com.example.school_bus_transit.helper.constants;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class parentProfile extends AppCompatActivity {
 
@@ -36,11 +60,20 @@ public class parentProfile extends AppCompatActivity {
     boolean[] selectedSchools;
     TextInputLayout parentFullName,email,parentPhoneNo;
     EditText parentAddress;
-    RadioGroup userType,gender;
+    RadioGroup gender;
     ShapeableImageView parentProfileImage;
     Button save;
-    String[] schoolArr = {"Concordia University","John Abbot","Vanier"};
-    ArrayList<Integer> schoolsList = new ArrayList<>();
+    String[] allSchoolName = new String[constants.allschool.size()];
+    ArrayList<Integer> SelectedSchoolsList = new ArrayList<>();
+     String photo_url = "",user_lat,user_long;
+
+    FirebaseAuth mAuth;
+    FirebaseFirestore fStore;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
+    private Uri filePath;
+    ShapeableImageView profileImage;
 
 
     @Override
@@ -49,6 +82,24 @@ public class parentProfile extends AppCompatActivity {
         setContentView(R.layout.activity_parent_profile);
         getSupportActionBar();
 
+        //Firebase Object Initialisation
+        mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        selectedSchools = new boolean[allSchoolName.length];
+
+        for(int i=0;i<constants.allschool.size();i++)
+        {
+            allSchoolName[i] = constants.allschool.get(i).getname();
+
+            if(constants.CurrentUser.getschool_id().contains(constants.allschool.get(i).getname()))
+            {
+                SelectedSchoolsList.add(i);
+                selectedSchools[i]=true;
+            }
+        }
 
         save = findViewById(R.id.save_parent_info);
         parentProfileImage = findViewById(R.id.parent_image);
@@ -59,6 +110,16 @@ public class parentProfile extends AppCompatActivity {
         schools = findViewById(R.id.parent_schools);
         gender = (RadioGroup) findViewById(R.id.parent_gender_grp);
 
+        email.getEditText().setText(constants.CurrentUser.getemail_id());
+        parentFullName.getEditText().setText(constants.CurrentUser.getfullName());
+        parentPhoneNo.getEditText().setText(constants.CurrentUser.getphone_no());
+        parentAddress.setText(constants.CurrentUser.getaddress());
+        user_lat = constants.CurrentUser.getuser_lat();
+        user_long = constants.CurrentUser.getuser_long();
+        photo_url = constants.CurrentUser.getphoto_url();
+        
+        
+
         //Select Profile Image
         parentProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,21 +129,21 @@ public class parentProfile extends AppCompatActivity {
         });
 
         //Select multiple schools from dropdown
-        selectedSchools = new boolean[schoolArr.length];
+
         schools.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(parentProfile.this);
                 builder.setTitle("Select Schools");
                 builder.setCancelable(false);
-                builder.setMultiChoiceItems(schoolArr, selectedSchools, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(allSchoolName, selectedSchools, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
                         if(b){
-                            schoolsList.add(i);
-                            Collections.sort(schoolsList);
+                            SelectedSchoolsList.add(i);
+                            Collections.sort(SelectedSchoolsList);
                         }else{
-                            schoolsList.remove(Integer.valueOf(i));
+                            SelectedSchoolsList.remove(Integer.valueOf(i));
                         }
                     }
                 });
@@ -90,9 +151,9 @@ public class parentProfile extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuilder strBldr = new StringBuilder();
-                        for (int j=0; j<schoolsList.size();j++){
-                            strBldr.append(schoolArr[schoolsList.get(j)]);
-                            if(j != schoolsList.size()-1){
+                        for (int j=0; j<SelectedSchoolsList.size();j++){
+                            strBldr.append(allSchoolName[SelectedSchoolsList.get(j)]);
+                            if(j != SelectedSchoolsList.size()-1){
                                 strBldr.append(",");
                             }
                         }
@@ -110,7 +171,7 @@ public class parentProfile extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         for(int j=0;j< selectedSchools.length;j++){
                             selectedSchools[j] = false;
-                            schoolsList.clear();
+                            SelectedSchoolsList.clear();
                             schools.setText("");
                         }
                     }
@@ -119,31 +180,6 @@ public class parentProfile extends AppCompatActivity {
             }
         });
 
-
-        //User type changed listener
-        userType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int userTypeIdVal = userType.getCheckedRadioButtonId();
-                String userTypeVal = ((RadioButton) findViewById(userTypeIdVal)).getText().toString();
-
-                if(userTypeVal.equalsIgnoreCase("driver")){
-                    schools.setError(null);
-                    schools.setEnabled(false);
-                    schools.setAlpha((float) 0.8);
-
-                    for(int j=0;j< selectedSchools.length;j++){
-                        selectedSchools[j] = false;
-                        schoolsList.clear();
-                        schools.setText("");
-                    }
-                }else{
-
-                    schools.setEnabled(true);
-                    schools.setAlpha((float) 1);
-                }
-            }
-        });
 
         //Select Address from autocomplete
         parentAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -224,7 +260,7 @@ public class parentProfile extends AppCompatActivity {
         }
     }
     private Boolean isSchoolValid(){
-        if(schoolsList.isEmpty()){
+        if(SelectedSchoolsList.isEmpty()){
             schools.setError("Field cannot be empty!");
             return false;
         }else{
@@ -233,21 +269,186 @@ public class parentProfile extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,@Nullable Intent data) {
+        super.onActivityResult(requestCode,
+                resultCode,
+                data);
+
+        // checking request code and result code
+        // if request code is PICK_IMAGE_REQUEST and
+        // resultCode is RESULT_OK
+        // then set image in the image view
+        if (requestCode == PICK_IMAGE_REQUEST
+                && resultCode == RESULT_OK
+                && data != null
+                && data.getData() != null) {
+
+            // Get the Uri of data
+            filePath = data.getData();
+
+            // Setting image on image view using Bitmap
+
+            profileImage.setImageURI(filePath);
+            uploadImage();
+        }
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                parentAddress.setText(place.getAddress());
+                System.out.println("Lat: " + place.getLatLng().latitude + "Long: " +place.getLatLng().longitude);
+                user_lat = String.valueOf(place.getLatLng().latitude);
+                user_long = String.valueOf(place.getLatLng().longitude);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toast.makeText(parentProfile.this,status.getStatusMessage(),Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void uploadImage() {
+        if (filePath != null) {
+
+            // Code for showing progressDialog while uploading
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Defining the child of storageReference
+            StorageReference ref
+                    = storageReference
+                    .child(UUID.randomUUID().toString());
+
+            // adding listeners on upload
+            // or failure of image
+            UploadTask uploadTask = ref.putFile(filePath);
+            uploadTask
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                                {
+
+                                    // Image uploaded successfully
+                                    // Dismiss dialog
+                                    progressDialog.dismiss();
+
+                                    Toast
+                                            .makeText(parentProfile.this,
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+
+                            // Error, Image not uploaded
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(parentProfile.this,
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                                // Progress Listener for loading
+                                // percentage on the dialog box
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int)progress + "%");
+                                }
+                            });
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        photo_url = task.getResult().toString();
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
+                }
+            });
+        }
+    }
+
     public void saveUser(View view) {
-        String emailVal = email.getEditText().toString();
-        String fullName = parentFullName.getEditText().toString();
-        String phoneNoVal = parentPhoneNo.getEditText().toString();
+        String emailVal = email.getEditText().getText().toString();
+        String fullName = parentFullName.getEditText().getText().toString();
+        String phoneNoVal = parentPhoneNo.getEditText().getText().toString();
         String addressVal = parentAddress.getText().toString();
 
+        int genderIdVal = gender.getCheckedRadioButtonId();
+        String genderVal = ((RadioButton) findViewById(genderIdVal)).getText().toString();
 
+       
         try {
             if (!isSchoolValid() | !isEmailValid() | !isPhoneNoValid() | !isAddressValid()) {
                 return;
             }
-            String[] arr = new String[schoolsList.size()];
-            for (int i = 0; i < schoolsList.size(); i++) {
-                arr[i] = schoolArr[schoolsList.get(i)];
+            String[] SelectedSchools = new String[SelectedSchoolsList.size()];
+            for (int i = 0; i < SelectedSchoolsList.size(); i++) {
+                SelectedSchools[i] = allSchoolName[SelectedSchoolsList.get(i)];
             }
+
+            Map<String,Object> user = new HashMap<>();
+            user.put("fullName",fullName);
+            user.put("email_id",emailVal);
+            user.put("phone_no",phoneNoVal);
+            user.put("address",addressVal);
+            user.put("user_type", "PARENT");
+            user.put("user_id",constants.CurrentUser.getuser_id());
+            user.put("bus_id","");
+            user.put("gender",genderVal);
+            user.put("photo_url",photo_url);
+            user.put("user_lat",user_lat);
+            user.put("user_long",user_long);
+
+            user.put("school_id", Arrays.asList(SelectedSchools));
+
+
+            fStore.collection("User").document(constants.CurrentUser.getuser_id()).update(user);
+
+            Toast
+                    .makeText(parentProfile.this,
+                            "Profile Updated Successfully . ",
+                            Toast.LENGTH_SHORT)
+                    .show();
+            
+            
         }
         catch(Exception e)
         {

@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.school_bus_transit.R;
@@ -50,6 +52,7 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
     FirebaseFirestore fStore;
     FirebaseStorage storage;
     StorageReference storageReference;
+    Button getDriverInfo;
 
 
     @Override
@@ -62,6 +65,14 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         getdata();
+
+        getDriverInfo = findViewById(R.id.get_driver_info);
+        getDriverInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(busTrack.this, parentDriverProfile.class));
+            }
+        });
     }
 
     String getMapsApiDirectionsUrl() {

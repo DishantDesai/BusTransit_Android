@@ -6,9 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".parents.parentProfile">
@@ -163,8 +161,9 @@
                 android:id="@+id/parent_radio_btn_male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Male"
-                android:layout_marginRight="20dp" />
+                android:layout_marginRight="20dp"
+                android:checked="true"
+                android:text="Male" />
 
             <RadioButton
                 android:id="@+id/parent_radio_btn_female"
