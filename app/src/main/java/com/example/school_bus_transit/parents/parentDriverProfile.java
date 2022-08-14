@@ -36,7 +36,6 @@ public class parentDriverProfile extends AppCompatActivity {
         email = findViewById(R.id.parent_driver_email);
         fullName = findViewById(R.id.parent_driver_full_name);
         phoneNo = findViewById(R.id.parent_driver_phone_no);
-        address = findViewById(R.id.parent_driver_address);
 
 
     }
