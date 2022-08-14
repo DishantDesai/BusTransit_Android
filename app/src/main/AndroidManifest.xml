@@ -33,6 +33,9 @@
             android:name=".parents.parentProfile"
             android:exported="false" />
         <activity
+            android:name=".parents.ParentNotification"
+            android:exported="false" />
+        <activity
             android:name=".parents.busTrack"
             android:exported="false" />
         <activity

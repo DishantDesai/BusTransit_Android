@@ -136,7 +136,6 @@ public class DriverNotification extends AppCompatActivity {
         alertDialog.show();
     }
 
-
     private void CallDriverHomePage()
     {
 

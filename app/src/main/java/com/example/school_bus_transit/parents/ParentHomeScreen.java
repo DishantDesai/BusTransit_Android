@@ -25,6 +25,7 @@ import com.example.school_bus_transit.model.parentScreenModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.datepicker.OnSelectionChangedListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,35 +38,6 @@ public class ParentHomeScreen extends AppCompatActivity {
     RecyclerView recyclerViewBusList;
     private RecyclerView.Adapter busAdapter;
     BottomNavigationView bottomNavigationView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        context = getApplicationContext();
-
-        super.onCreate(savedInstanceState);
-
-
-
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
-
-        setContentView(R.layout.activity_parent_home_screen);
-        getSupportActionBar().hide();
-
-        List<String> school_id = new ArrayList<String>();
-
-        for(int i=0;i<constants.allschool.size();i++)
-        {
-            if(constants.CurrentUser.getschool_id().contains(constants.allschool.get(i).getname()))
-            {
-                school_id.add(constants.allschool.get(i).getschool_id());
-            }
-        }
-
-        getParentData(school_id);
-
-    }
 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -84,6 +56,37 @@ public class ParentHomeScreen extends AppCompatActivity {
         }
         return false;
     }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        context = getApplicationContext();
+
+        super.onCreate(savedInstanceState);
+
+
+
+//        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+//        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+//        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
+        setContentView(R.layout.activity_parent_home_screen);
+        getSupportActionBar().hide();
+
+        List<String> school_id = new ArrayList<String>();
+
+        for(int i=0;i<constants.allschool.size();i++)
+        {
+            if(constants.CurrentUser.getschool_id().contains(constants.allschool.get(i).getname()))
+            {
+                school_id.add(constants.allschool.get(i).getschool_id());
+            }
+        }
+
+        getParentData(school_id);
+
+    }
+
 
     public void getParentData(List<String> school_id)
     {
