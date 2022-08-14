@@ -27,6 +27,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusTransit_Android">
         <activity
+            android:name=".parents.parentDriverProfile"
+            android:exported="false" />
+        <activity
+            android:name=".parents.parentProfile"
+            android:exported="false" />
+        <activity
             android:name=".parents.busTrack"
             android:exported="false" />
         <activity
