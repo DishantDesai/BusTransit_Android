@@ -10,9 +10,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.adapter.parentNotificationAdapter;
+import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.NotificationModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -22,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ParentNotification extends AppCompatActivity {
 
@@ -43,8 +46,18 @@ public class ParentNotification extends AppCompatActivity {
     public void getNotification()
     {
 
+        List<String> school_id = new ArrayList<>();
 
-        FirebaseFirestore.getInstance().collection("Notification").addSnapshotListener(
+        for(int i = 0; i< constants.allschool.size(); i++)
+        {
+            if(constants.CurrentUser.getschool_id().contains(constants.allschool.get(i).getname()))
+            {
+                school_id.add(constants.allschool.get(i).getschool_id());
+            }
+        }
+
+
+        FirebaseFirestore.getInstance().collection("Notification").whereIn("school_id",school_id).addSnapshotListener(
                 new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -93,6 +106,8 @@ public class ParentNotification extends AppCompatActivity {
                             recyclerViewNotificationList.setVisibility(View.VISIBLE);
                         }
 
+                        ProgressBar loader = (ProgressBar)findViewById(R.id.parent_notification_data_loading);
+                        loader.setVisibility(View.INVISIBLE);
                     }
                 });
 

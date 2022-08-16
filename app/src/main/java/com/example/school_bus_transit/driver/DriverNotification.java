@@ -51,7 +51,7 @@ public class DriverNotification extends AppCompatActivity {
 
         send_message = findViewById(R.id.send_message);
 
-        title_text_box.setText("Traffic jam");
+        title_text_box.setText("Traffic jam test 1");
         description_text_box.setText("it will take more time to reach home!");
 
         send_message.setOnClickListener(new View.OnClickListener() {
@@ -85,14 +85,14 @@ public class DriverNotification extends AppCompatActivity {
         notification.put("message", description_text_box.getText().toString());
         notification.put("timestamp", FieldValue.serverTimestamp());
 
-        FirebaseFirestore.getInstance().collection("NotificationModel")
+        FirebaseFirestore.getInstance().collection("Notification")
                 .add(notification)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference)
                     {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                        if(FirebaseHelper.updateField("NotificationModel",documentReference.getId(),"notification_id",documentReference.getId())){
+                        if(FirebaseHelper.updateField("Notification",documentReference.getId(),"notification_id",documentReference.getId())){
                             Log.d(TAG, "notification ID: " + documentReference.getId() + " -- Updated");
                         }
                         else
@@ -109,7 +109,7 @@ public class DriverNotification extends AppCompatActivity {
                 });
 
 
-        create_alert("NotificationModel sent successfully!");
+        create_alert("Notification sent successfully!");
 
     }
 

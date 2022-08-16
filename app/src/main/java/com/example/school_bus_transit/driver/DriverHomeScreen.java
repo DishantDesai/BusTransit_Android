@@ -3,8 +3,10 @@ package com.example.school_bus_transit.driver;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,6 +18,8 @@ import com.example.school_bus_transit.helper.LocationGetter;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.helper.fetchRoute;
 import com.example.school_bus_transit.model.BusModel;
+import com.example.school_bus_transit.parents.ParentNotification;
+import com.example.school_bus_transit.parents.parentProfile;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,6 +33,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,7 +44,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCallback {
+public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     Button tripFromSchool, tripToSchool, stopTrip;
 
@@ -71,7 +77,8 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
         tripToSchool = findViewById(R.id.driverTriptoSchool);
         stopTrip = findViewById(R.id.stopTrip);
         stopTrip.setActivated(false);
-
+        BottomNavigationView bottomNav = findViewById(R.id.driver_bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         locationHelper  = new GPSTracker(this, new LocationGetter() {
             @Override
@@ -115,6 +122,24 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.bottom_profile:
+                startActivity(new Intent(DriverHomeScreen.this, DriverProfile.class));
+                return true;
+
+            case R.id.bottom_home:
+                startActivity(new Intent(DriverHomeScreen.this, DriverHomeScreen.class));
+                return true;
+
+            case R.id.bottom_notification:
+                startActivity(new Intent(DriverHomeScreen.this, DriverNotification.class));
+                return true;
+        }
+        return false;
     }
 
     String getMapsApiDirectionsUrl() {

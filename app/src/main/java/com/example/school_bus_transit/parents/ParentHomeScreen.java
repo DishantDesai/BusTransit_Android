@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.school_bus_transit.Login;
 import com.example.school_bus_transit.R;
@@ -26,40 +27,37 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.datepicker.OnSelectionChangedListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParentHomeScreen extends AppCompatActivity{
+public class ParentHomeScreen extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Context context;
     RecyclerView recyclerViewBusList;
     private RecyclerView.Adapter busAdapter;
-    BottomNavigationView bottomNavigationView;
+    NavigationView bottomNavigationView;
 
-    void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
-        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.bottom_profile:
-//                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
-                        return true;
 
-                    case R.id.bottom_home:
-//                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
-                        return true;
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.bottom_profile:
+                startActivity(new Intent(ParentHomeScreen.this, parentProfile.class));
+                return true;
 
-                    case R.id.bottom_notification:
-//                startActivity(new Intent(ParentHomeScreen.this, Registration.class));
-                        return true;
-                }
-                return false;
-            }
-        });
+            case R.id.bottom_home:
+                startActivity(new Intent(ParentHomeScreen.this, ParentHomeScreen.class));
+                return true;
+
+            case R.id.bottom_notification:
+                startActivity(new Intent(ParentHomeScreen.this, ParentNotification.class));
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -71,6 +69,8 @@ public class ParentHomeScreen extends AppCompatActivity{
 
         setContentView(R.layout.activity_parent_home_screen);
         getSupportActionBar().hide();
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         List<String> school_id = new ArrayList<String>();
 
@@ -195,6 +195,8 @@ public class ParentHomeScreen extends AppCompatActivity{
                                         recyclerViewBusList.setVisibility(View.VISIBLE);
                                     }
 //                                    startActivity(new Intent(ParentHomeScreen.this, parentProfile.class));
+                                    ProgressBar loader = (ProgressBar)findViewById(R.id.parent_data_loading);
+                                    loader.setVisibility(View.INVISIBLE);
                                 }
                             }
                         }
@@ -205,5 +207,6 @@ public class ParentHomeScreen extends AppCompatActivity{
 
 
     }
+
 
 }
