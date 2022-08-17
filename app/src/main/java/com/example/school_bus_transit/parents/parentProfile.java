@@ -240,10 +240,23 @@ public class parentProfile extends AppCompatActivity {
     }
     private Boolean isPhoneNoValid(){
         String phoneVal = parentPhoneNo.getEditText().getText().toString();
-        if(phoneVal.isEmpty()){
+        String phoneValidation = "^" +
+                "\\" +
+                "d{3}-" +
+                "\\" +
+                "d{3}-" +
+                "\\d{4}$";
+        if(phoneVal.isEmpty())
+        {
             parentPhoneNo.setError("Field cannot be empty!");
             return false;
-        }else{
+        }else if(!phoneVal.matches(phoneValidation))
+        {
+            parentPhoneNo.setError("PhoneNo should be in 345-345-3456 formate.");
+            return false;
+        }
+        else
+        {
             parentPhoneNo.setError(null);
             return true;
         }

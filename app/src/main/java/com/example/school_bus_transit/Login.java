@@ -148,7 +148,6 @@ public class Login extends AppCompatActivity {
                                         doc.get("user_lat").toString().trim(),
                                         doc.get("user_long").toString().trim(),
                                         doc.get("user_type").toString()
-
                                 );
 
                             }

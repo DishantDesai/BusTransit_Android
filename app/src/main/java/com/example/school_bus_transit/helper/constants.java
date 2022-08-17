@@ -13,7 +13,21 @@ public class constants {
     public final static String DRIVER = "driver";
     public final static String PARENT = "parent";
     public static UserModel CurrentUser,CurrentSelectedDriver;
-    public static BusModel CurrentBus;
+    public static BusModel CurrentBus = new BusModel(
+            false,
+            false,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+    );
     public static SchoolModel CurrentSchool;
     public static List<SchoolModel> allschool=new ArrayList<>();
     public static List<UserModel> alldriver=new ArrayList<>();

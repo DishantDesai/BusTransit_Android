@@ -222,7 +222,7 @@ public class GPSTracker implements LocationListener {
     public void onLocationChanged(Location location)
     {
         locationGetter.LocationChangeListner(location.getLatitude(),location.getLongitude());
-        Toast.makeText(mContext, "location update " + location.getLatitude() + "  -  " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "location update " + location.getLatitude() + "  -  " + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
     }
 

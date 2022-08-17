@@ -58,7 +58,7 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
     FirebaseFirestore fStore;
     FirebaseStorage storage;
     StorageReference storageReference;
-
+    BottomNavigationView bottomNav ;
     GPSTracker locationHelper;
 
     @Override
@@ -72,21 +72,21 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-
         tripFromSchool = findViewById(R.id.driverTripFromSchool);
         tripToSchool = findViewById(R.id.driverTriptoSchool);
         stopTrip = findViewById(R.id.stopTrip);
         stopTrip.setActivated(false);
-        BottomNavigationView bottomNav = findViewById(R.id.driver_bottomNavigationView);
+        bottomNav = findViewById(R.id.driver_bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         locationHelper  = new GPSTracker(this, new LocationGetter() {
             @Override
             public void LocationChangeListner(double latitude, double longitude) {
-                LocationChange(latitude,longitude);
 
-                if(constants.CurrentBus!=null)
+
+                if(constants.CurrentBus!=null && constants.CurrentBus.getactive_sharing())
                 {
+                    LocationChange(latitude,longitude);
                     fetchRoute myAsyncTasks = new fetchRoute();
                     myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
 
@@ -95,33 +95,53 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
-
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.DriverMap);
         mapFragment.getMapAsync(this);
 
         getActionBar();
 
-
-        System.out.println("hello");
-        tripFromSchool.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                start_tripFromSchool(v);
+        if(constants.CurrentBus.getactive_sharing())
+        {
+            if(constants.CurrentBus.getgoing_to_school())
+            {
+                start_tripToSchool();
             }
-        });
+            else
+            {
+                start_tripFromSchool();
+            }
+        }
+
+        tripFromSchool.setOnClickListener(
+                new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                start_tripFromSchool();
+            }
+        }
+        );
 
         tripToSchool.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                start_tripToSchool(v);
+                start_tripToSchool();
             }
         });
 
         stopTrip.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                start_stopTrip(v);
+                start_stopTrip();
             }
         });
 
+//        bottomNav.setSelectedItemId(R.id.bottom_home);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        bottomNav.setSelectedItemId(R.id.bottom_home);
     }
 
     @Override
@@ -133,6 +153,7 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
 
             case R.id.bottom_home:
                 startActivity(new Intent(DriverHomeScreen.this, DriverHomeScreen.class));
+//                finish();
                 return true;
 
             case R.id.bottom_notification:
@@ -167,7 +188,7 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
     }
 
 
-    public void start_tripFromSchool(View view) {
+    public void start_tripFromSchool() {
 
         try {
 
@@ -188,7 +209,7 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    public void start_tripToSchool(View view) {
+    public void start_tripToSchool() {
         try {
 
             if (!constants.CurrentBus.getactive_sharing()) {
@@ -210,7 +231,7 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
 
     }
 
-    public void start_stopTrip(View view) {
+    public void start_stopTrip() {
         try {
 
             if (constants.CurrentBus.getactive_sharing() || constants.CurrentBus.getactive_sharing()) {

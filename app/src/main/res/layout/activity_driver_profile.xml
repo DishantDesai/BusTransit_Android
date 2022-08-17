@@ -32,6 +32,7 @@
             android:layout_marginVertical="20dp"
             android:layout_marginHorizontal="30dp"
             android:hint="Email"
+            android:enabled="false"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +41,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,7 +60,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,7 +79,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -144,7 +145,7 @@
                 android:textSize="18sp" />
 
             <RadioGroup
-                android:id="@+id/gender_grp"
+                android:id="@+id/driver_gender_grp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkedButton="@id/radio_btn_male"
@@ -154,14 +155,15 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radio_btn_male"
+                    android:id="@+id/driver_radio_btn_male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Male"
+                    android:checked="true"
                     android:layout_marginRight="20dp" />
 
                 <RadioButton
-                    android:id="@+id/radio_btn_female"
+                    android:id="@+id/driver_radio_btn_female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Female" />

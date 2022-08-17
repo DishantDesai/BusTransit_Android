@@ -2,16 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
         <item
+            android:id="@+id/bottom_home"
+            android:title="Home"
+            android:state_checked="true"
+            android:icon="?attr/actionModeSelectAllDrawable"
+            />
+        <item
             android:id="@+id/bottom_profile"
             android:title="Profile"
             android:icon="@drawable/ic_person_outline_white_24dp"
         />
-        <item
-            android:id="@+id/bottom_home"
-            android:title="Home"
-            android:enabled="true"
-            android:icon="?attr/actionModeSelectAllDrawable"
-        />
+
         <item
             android:id="@+id/bottom_notification"
             android:title="Notification"

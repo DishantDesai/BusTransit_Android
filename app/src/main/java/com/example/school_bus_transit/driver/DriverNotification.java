@@ -99,6 +99,9 @@ public class DriverNotification extends AppCompatActivity {
                         {
                             Log.d(TAG, "Error in : notification ID: " + documentReference.getId());
                         }
+
+                        title_text_box.setText("");
+                        description_text_box.setText("");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

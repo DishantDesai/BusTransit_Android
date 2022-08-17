@@ -155,10 +155,23 @@ public class add_new_school extends AppCompatActivity {
     }
     private Boolean isPhoneNoValid(){
         String phoneVal = phoneNo.getEditText().getText().toString();
-        if(phoneVal.isEmpty()){
+        String phoneValidation = "^" +
+                "\\" +
+                "d{3}-" +
+                "\\" +
+                "d{3}-" +
+                "\\d{4}$";
+        if(phoneVal.isEmpty())
+        {
             phoneNo.setError("Field cannot be empty!");
             return false;
-        }else{
+        }else if(!phoneVal.matches(phoneValidation))
+        {
+            phoneNo.setError("PhoneNo should be in 345-345-3456 formate.");
+            return false;
+        }
+        else
+        {
             phoneNo.setError(null);
             return true;
         }
