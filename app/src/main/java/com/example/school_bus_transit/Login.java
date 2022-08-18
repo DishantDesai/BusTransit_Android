@@ -48,8 +48,8 @@ public class Login extends AppCompatActivity {
         email = findViewById(R.id.email);
         pass = findViewById(R.id.password);
 
-        email.getEditText().setText("milan@gmail.com");
-        pass.getEditText().setText("123456");
+        email.getEditText().setText("abc12@gmail.com");
+        pass.getEditText().setText("Admin@123");
 
         loginBtn=findViewById(R.id.login);
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.school_bus_transit.MainActivity;
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.Registration;
 import com.example.school_bus_transit.helper.FirebaseHelper;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.BusModel;
@@ -102,6 +103,8 @@ public class DriverNotification extends AppCompatActivity {
 
                         title_text_box.setText("");
                         description_text_box.setText("");
+                        Toast.makeText(DriverNotification.this, "Notification sent successfully !!! ", Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -112,7 +115,7 @@ public class DriverNotification extends AppCompatActivity {
                 });
 
 
-        create_alert("Notification sent successfully!");
+
 
     }
 

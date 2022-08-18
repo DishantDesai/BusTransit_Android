@@ -39,6 +39,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -60,11 +62,13 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_track);
 
+        getdata();
+
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.busTrack_map);
         mapFragment.getMapAsync(this);
 
-        getdata();
+
 
         getDriverInfo = findViewById(R.id.get_driver_info);
         getDriverInfo.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +77,22 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
                 startActivity(new Intent(busTrack.this, parentDriverProfile.class));
             }
         });
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Your code to run in GUI thread here
+                        onMapReady(mMap);
+                    }
+                });
+
+            }
+        }, 12000);
     }
 
     String getMapsApiDirectionsUrl() {
@@ -94,7 +114,7 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
 //        LatLng curr = new LatLng(Double.parseDouble(b.getcurrent_lat()), Double.parseDouble(b.getcurrent_long()));
 
-        if (constants.CurrentBus != null) {
+        if (!constants.CurrentBus.getcurrent_lat().equals("")) {
 
 
             LatLng curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
@@ -181,6 +201,8 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
                         fetchRoute myAsyncTasks = new fetchRoute();
                         myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
                         onMapReady(mMap);
+
+
                     }
                 });
 

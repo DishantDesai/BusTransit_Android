@@ -22,6 +22,7 @@ import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.Registration;
 import com.example.school_bus_transit.driver.DriverProfile;
 import com.example.school_bus_transit.helper.constants;
+import com.example.school_bus_transit.model.UserModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -454,6 +455,21 @@ public class parentProfile extends AppCompatActivity {
 
 
             fStore.collection("User").document(constants.CurrentUser.getuser_id()).update(user);
+
+            constants.CurrentUser = new UserModel(
+                    constants.CurrentUser.getuser_id(),
+                    photo_url,
+                    genderVal,
+                    constants.CurrentUser.getbus_id(),
+                    fullName,
+                    phoneNoVal,
+                    Arrays.asList(SelectedSchools),
+                    emailVal,
+                    addressVal,
+                    user_lat,
+                    user_long,
+                    "PARENT"
+            );
 
             Toast
                     .makeText(parentProfile.this,

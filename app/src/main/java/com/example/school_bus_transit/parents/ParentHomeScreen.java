@@ -50,7 +50,7 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
                 return true;
 
             case R.id.bottom_home:
-                startActivity(new Intent(ParentHomeScreen.this, ParentHomeScreen.class));
+//                startActivity(new Intent(ParentHomeScreen.this, ParentHomeScreen.class));
                 return true;
 
             case R.id.bottom_notification:
@@ -87,6 +87,22 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        List<String> school_id = new ArrayList<String>();
+
+        for(int i=0;i<constants.allschool.size();i++)
+        {
+            if(constants.CurrentUser.getschool_id().contains(constants.allschool.get(i).getname()))
+            {
+                school_id.add(constants.allschool.get(i).getschool_id());
+            }
+        }
+
+        getParentData(school_id);
+    }
 
     public void getParentData(List<String> school_id)
     {
