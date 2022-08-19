@@ -2,6 +2,7 @@ package com.example.school_bus_transit.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,81 @@ public class parentHomeScreenAdapter extends RecyclerView.Adapter<parentHomeScre
 //        holder.bus_status.setText(parentScreendata.get(position).getfullName().toString());
         holder.bus_number.setText(parentScreendata.get(position).getbusNumber().toString());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener()
+
+        holder.driver_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel: "+parentScreendata.get(position).getphone_no()));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.driver_image.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(context, busTrack.class);
+                intent.putExtra("bus_id",parentScreendata.get(position).getbus_id());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                constants.CurrentSelectedDriver = null;
+
+                for(int i=0;i<constants.alldriver.size();i++)
+                {
+                    if(parentScreendata.get(position).getbus_id().equals(constants.alldriver.get(i).getbus_id()))
+                    {
+                        constants.CurrentSelectedDriver = constants.alldriver.get(i);
+                    }
+                }
+                context.startActivity(intent);
+            }
+        });
+
+        holder.bus_number.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(context, busTrack.class);
+                intent.putExtra("bus_id",parentScreendata.get(position).getbus_id());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                constants.CurrentSelectedDriver = null;
+
+                for(int i=0;i<constants.alldriver.size();i++)
+                {
+                    if(parentScreendata.get(position).getbus_id().equals(constants.alldriver.get(i).getbus_id()))
+                    {
+                        constants.CurrentSelectedDriver = constants.alldriver.get(i);
+                    }
+                }
+                context.startActivity(intent);
+            }
+        });
+
+        holder.driver_name.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(context, busTrack.class);
+                intent.putExtra("bus_id",parentScreendata.get(position).getbus_id());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                constants.CurrentSelectedDriver = null;
+
+                for(int i=0;i<constants.alldriver.size();i++)
+                {
+                    if(parentScreendata.get(position).getbus_id().equals(constants.alldriver.get(i).getbus_id()))
+                    {
+                        constants.CurrentSelectedDriver = constants.alldriver.get(i);
+                    }
+                }
+                context.startActivity(intent);
+            }
+        });
+
+        holder.bus_status.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

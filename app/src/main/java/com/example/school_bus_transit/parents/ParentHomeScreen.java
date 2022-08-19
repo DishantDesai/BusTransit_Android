@@ -7,11 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.school_bus_transit.Login;
 import com.example.school_bus_transit.R;
@@ -42,6 +45,7 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
     NavigationView bottomNavigationView;
 
 
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -69,6 +73,11 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
 
         setContentView(R.layout.activity_parent_home_screen);
         getSupportActionBar().hide();
+
+        //call the driver
+
+
+
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
         bottomNav.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
