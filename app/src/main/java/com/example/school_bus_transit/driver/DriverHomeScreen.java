@@ -3,7 +3,8 @@ package com.example.school_bus_transit.driver;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.beloo.widget.chipslayoutmanager.layouter.Item;
+import com.example.school_bus_transit.Login;
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.helper.FirebaseHelper;
 import com.example.school_bus_transit.helper.GPSTracker;
@@ -20,8 +21,6 @@ import com.example.school_bus_transit.helper.LocationGetter;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.helper.fetchRoute;
 import com.example.school_bus_transit.model.BusModel;
-import com.example.school_bus_transit.parents.ParentNotification;
-import com.example.school_bus_transit.parents.parentProfile;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,7 +34,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +48,7 @@ import java.util.Map;
 public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     Button tripFromSchool, tripToSchool, stopTrip;
+    View userIcon;
 
     //to Show Driver Location
     private GoogleMap mMap;
@@ -80,6 +79,15 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
         stopTrip = findViewById(R.id.stopTrip);
         stopTrip.setActivated(false);
         bottomNav = findViewById(R.id.driver_bottomNavigationView);
+
+        userIcon = findViewById(R.id.add_user_icon);
+
+        userIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAlertDialogButtonClicked(view);
+            }
+        });
         bottomNav.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         locationHelper  = new GPSTracker(this, new LocationGetter() {
@@ -139,6 +147,33 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
 
 //        bottomNav.setSelectedItemId(R.id.bottom_home);
 
+    }
+
+    public void showAlertDialogButtonClicked(View view) {
+
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Sign out");
+        builder.setMessage("are you sure want to sign out?");
+
+        // add the buttons
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

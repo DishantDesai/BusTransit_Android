@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.school_bus_transit.Login;
 import com.example.school_bus_transit.R;
@@ -43,8 +47,7 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
     RecyclerView recyclerViewBusList;
     private RecyclerView.Adapter busAdapter;
     NavigationView bottomNavigationView;
-
-
+    View userIcon;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -64,6 +67,34 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
         return false;
     }
 
+
+    public void showAlertDialogButtonClicked(View view) {
+
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Sign out");
+        builder.setMessage("are you sure want to sign out?");
+
+        // add the buttons
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+                                Intent intent = new Intent(context,Login.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -73,6 +104,17 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
 
         setContentView(R.layout.activity_parent_home_screen);
         getSupportActionBar().hide();
+
+        userIcon = findViewById(R.id.add_user_icon);
+
+        userIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                showAlertDialogButtonClicked(view);
+
+            }
+        });
 
         //call the driver
 
