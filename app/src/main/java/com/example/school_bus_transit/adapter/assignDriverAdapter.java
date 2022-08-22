@@ -2,18 +2,23 @@ package com.example.school_bus_transit.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.Login;
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.admin.admin_assign_driver;
+import com.example.school_bus_transit.admin.schoolDetails;
+import com.example.school_bus_transit.admin.viewAllSchools;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,19 +68,23 @@ public class assignDriverAdapter extends RecyclerView.Adapter<assignDriverAdapte
     {
 
         holder.driver_name.setText(driver.get(position).getfullName().toString());
+        Glide.with(holder.itemView.getContext())
+                .load(driver.get(position).getphoto_url())
+                .into(holder.driverProfile);
         holder.allocate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                  String driverId = "";
-
+                String driverId = "";
                 Map<String,Object> school_update = new HashMap<>();
                 school_update.put("bus_id",constants.CurrentBus.getbus_id());
                 fStore.collection("User").document(driver.get(position).getuser_id()).update(school_update);
                 Toast.makeText(context, "Driver assigned successfully", Toast.LENGTH_SHORT).show();
 //                ((admin_assign_driver)context).finish();
-
-
+//
+//                Intent intent = new Intent(context, schoolDetails.class );
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
             }
         });
 
@@ -91,10 +100,12 @@ public class assignDriverAdapter extends RecyclerView.Adapter<assignDriverAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView driver_name , allocate;
+        ImageView driverProfile;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             driver_name = (TextView) itemView.findViewById(R.id.admin_assign_driver_name);
             allocate = itemView.findViewById(R.id.admin_assign_driver_allocate);
+            driverProfile = itemView.findViewById(R.id.driver_profile);
         }
     }
 }

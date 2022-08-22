@@ -123,14 +123,5 @@ public class viewAllSchools extends AppCompatActivity implements Serializable  {
                             }
                         }
                 );
-
-
-
-
-
-
-
-
-
     }
 }

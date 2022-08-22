@@ -26,8 +26,8 @@ public class admin_assign_driver extends AppCompatActivity {
     Context mContext;
     TextView school_name;
     TextView school_address;
-    TextView end_address;
-    
+    TextView end_address,driverCountHeading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,7 +43,7 @@ public class admin_assign_driver extends AppCompatActivity {
         school_name = (TextView) findViewById(R.id.admin_assign_driver_school_name) ;
         school_address = (TextView) findViewById(R.id.admin_assign_address_text) ;
         end_address = (TextView) findViewById(R.id.admin_assign_end_address_text) ;
-
+        driverCountHeading = findViewById(R.id.admin_school_bus_heading);
         school_name.setText(constants.CurrentSchool.getname());
         school_address.setText(constants.CurrentBus.getsource());
         end_address.setText(constants.CurrentBus.getdestination());
@@ -61,6 +61,7 @@ public class admin_assign_driver extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerViewDriverList =  findViewById(R.id.admin_assign_driver_recycle_view);
         recyclerViewDriverList.setVerticalScrollBarEnabled(false);
+        driverCountHeading.setText("Driver List (" + driver.size() + ")");
         if(driver.size()!=0)
         {
             recyclerViewDriverList.setLayoutManager(linearLayoutManager);

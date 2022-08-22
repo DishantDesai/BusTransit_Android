@@ -201,6 +201,7 @@ public class schoolDetails extends AppCompatActivity implements Serializable
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerViewSchoolList =  findViewById(R.id.admin_bus_list_recycle_view);
         recyclerViewSchoolList.setVerticalScrollBarEnabled(false);
+        busHeading.setText("Bus List (" + bus.size() + ")");
         if(bus.size()!=0)
         {
             recyclerViewSchoolList.setLayoutManager(linearLayoutManager);
@@ -208,10 +209,10 @@ public class schoolDetails extends AppCompatActivity implements Serializable
             recyclerViewSchoolList.setAdapter(busAdapter);
             recyclerViewSchoolList.setVisibility(View.VISIBLE);
         }
-        else
-        {
-            busHeading.setVisibility(View.INVISIBLE);
-        }
+//        else
+//        {
+//            busHeading.setVisibility(View.INVISIBLE);
+//        }
 
 
     }

@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".admin.viewAllSchools">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/topAppBarAddSchool"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:id="@+id/topAppBarAddSchool"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-    </com.google.android.material.appbar.AppBarLayout>
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/topAppBar"
@@ -23,15 +23,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/top_app_bar_menu"
-        app:title="M2n Transit" />
+         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="School"
+            android:layout_gravity="center"
+            android:id="@+id/toolbar_title"
+            android:textSize="24dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
 
     <TextView
         android:id="@+id/school"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="* School List *"
+        android:layout_height="wrap_content"
+        android:text="School List"
         android:textColor="@color/black"
-        android:textSize="30dp"
+        android:textSize="24dp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
