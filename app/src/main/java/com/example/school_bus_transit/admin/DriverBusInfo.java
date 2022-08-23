@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.helper.DirectionsJSONParser;
 import com.example.school_bus_transit.helper.constants;
@@ -33,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -53,12 +57,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallback,GoogleMap.OnCameraMoveStartedListener {
 
     TextView schoolName,schoolPhone,schoolAddress,endAddress,driverName,tripStatus,tripDirection, busno;
     Button releaseDriver;
-    ImageView driverProfile;
+    ShapeableImageView driverProfile;
     UserModel d;
     BusModel b;
     SchoolModel s;
@@ -79,6 +85,7 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
 
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         parenScrollView = findViewById(R.id.map_parent_scroll_view);
+
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -110,6 +117,21 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         });
 
 
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Your code to run in GUI thread here
+                        onMapReady(mMap);
+                    }
+                });
+
+            }
+        }, 12000);
 
     }
 
@@ -118,6 +140,7 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         String driver_id = (String) getIntent().getSerializableExtra("driver_id");
 
         driverName = (TextView) findViewById(R.id.admin_school_info_driver_name);
+        driverProfile = findViewById(R.id.driver_info_profile_image);
         tripStatus = (TextView) findViewById(R.id.trip_status);
         tripDirection = (TextView) findViewById(R.id.direction);
         schoolName = (TextView) findViewById(R.id.admin_school_info_name);
@@ -152,7 +175,9 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         }
 
         driverName.setText(d.getfullName());
-
+        Glide.with(this)
+                .load(d.getphoto_url())
+                .into(driverProfile);
         if(b.getactive_sharing())
         {
             tripStatus.setText("On");
@@ -183,7 +208,8 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         BitmapDescriptor logo = BitmapDescriptorFactory.fromResource(R.drawable.logo1);
         // Add a marker in Sydney and move the camera
 //        LatLng curr = new LatLng(Double.parseDouble(b.getcurrent_lat()), Double.parseDouble(b.getcurrent_long()));
-        LatLng curr = new LatLng(Double.parseDouble(b.getcurrent_lat()), Double.parseDouble(b.getcurrent_lat()));
+
+        LatLng curr = new LatLng(Double.parseDouble(b.getcurrent_lat()), Double.parseDouble(b.getcurrent_long()));
         LatLng des = new LatLng(Double.parseDouble(b.getdestination_lat()), Double.parseDouble(b.getdestination_long()));
         LatLng source = new LatLng(Double.parseDouble(b.getsource_lat()), Double.parseDouble(b.getsource_long()));
 
@@ -194,10 +220,10 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
 
 
         if(b.getactive_sharing()){
+
             mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to "+b.getdestination()));
             //       find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
             PolylineOptions routeCoordinates = new PolylineOptions();
-
             if(constants.routes.size()!=0)
             {
                 for (HashMap<String, String> latLng : constants.routes.get(0)) {
@@ -207,7 +233,6 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                 routeCoordinates.color(Color.BLUE);
                 Polyline route = mMap.addPolyline(routeCoordinates);
             }
-
         }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 25));
@@ -269,7 +294,13 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                             myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
 
                         }
-                        onMapReady(mMap);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Your code to run in GUI thread here
+                                onMapReady(mMap);
+                            }
+                        });
                     }
                 });
 

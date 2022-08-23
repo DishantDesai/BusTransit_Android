@@ -5,13 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.adapter.SchoolAdapter;
 import com.example.school_bus_transit.adapter.busListAdapter;
@@ -20,6 +25,8 @@ import com.example.school_bus_transit.model.BusModel;
 import com.example.school_bus_transit.model.SchoolModel;
 import com.example.school_bus_transit.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,13 +45,16 @@ public class schoolDetails extends AppCompatActivity implements Serializable
     private RecyclerView.Adapter busAdapter;
     static Context mContext;
     MaterialToolbar topAppBar;
-
+    Button deleteSchoolBtn;
+    FirebaseFirestore fStore;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_school_details);
         getSupportActionBar().hide();
+
+        fStore = FirebaseFirestore.getInstance();
 
         String school_id = (String) getIntent().getSerializableExtra("school_id");
         mContext=getApplicationContext();
@@ -73,7 +83,8 @@ public class schoolDetails extends AppCompatActivity implements Serializable
 
         for(int i=0;i<constants.allschool.size();i++)
         {
-            if(school_id.equals(constants.allschool.get(i).getschool_id()))
+            String schoolId = school_id != null ? school_id : constants.CurrentSchool.getschool_id();
+            if(schoolId.equals(constants.allschool.get(i).getschool_id()))
             {
                 school = constants.allschool.get(i);
             }
@@ -84,7 +95,15 @@ public class schoolDetails extends AppCompatActivity implements Serializable
         schoolMo = findViewById(R.id.schoolMobVal);
         schoolAddress = findViewById(R.id.schoolAddressVal);
         busHeading = findViewById(R.id.admin_school_bus_heading);
+        deleteSchoolBtn = findViewById(R.id.delete_school);
 
+
+        deleteSchoolBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteSchoolHandler();
+            }
+        });
 //        getBus();
         setData();
     }
@@ -107,9 +126,6 @@ public class schoolDetails extends AppCompatActivity implements Serializable
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if(task.isSuccessful())
                                 {
-
-
-
                                     ArrayList<BusModel> bus = new ArrayList<>();
                                     for(QueryDocumentSnapshot doc : task.getResult())
                                     {
@@ -202,13 +218,12 @@ public class schoolDetails extends AppCompatActivity implements Serializable
         recyclerViewSchoolList =  findViewById(R.id.admin_bus_list_recycle_view);
         recyclerViewSchoolList.setVerticalScrollBarEnabled(false);
         busHeading.setText("Bus List (" + bus.size() + ")");
-        if(bus.size()!=0)
-        {
-            recyclerViewSchoolList.setLayoutManager(linearLayoutManager);
-            busAdapter = new busListAdapter(mContext, (ArrayList<BusModel>) bus);
-            recyclerViewSchoolList.setAdapter(busAdapter);
-            recyclerViewSchoolList.setVisibility(View.VISIBLE);
-        }
+
+        //Set recycle view adapter for bus list
+        recyclerViewSchoolList.setLayoutManager(linearLayoutManager);
+        busAdapter = new busListAdapter(mContext, (ArrayList<BusModel>) bus);
+        recyclerViewSchoolList.setAdapter(busAdapter);
+        recyclerViewSchoolList.setVisibility(View.VISIBLE);
 //        else
 //        {
 //            busHeading.setVisibility(View.INVISIBLE);
@@ -217,5 +232,66 @@ public class schoolDetails extends AppCompatActivity implements Serializable
 
     }
 
+    private void deleteSchoolHandler(){
 
+
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete School?");
+        builder.setMessage("are you sure, you want to delete school?");
+
+        /*
+        * Delete School
+        *   -> Check if school has bus assigned
+        *       -> Yes, ask admin to delete all bus first
+        *       -> No, Delete School
+        * */
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+
+                //Query to found all buses for school
+                fStore.collection("Bus").whereEqualTo("school_id",school.getschool_id())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+
+                                    //If bus found then ask to delete all bus
+                                    if(task.getResult().size() > 0){
+                                        Toast.makeText(schoolDetails.this, "Attention: Inorder to delete school you need to delete all Buses!" , Toast.LENGTH_LONG).show();
+                                    }else{// Delete school
+                                        fStore.collection("School")
+                                                .document(school.getschool_id())
+                                                .delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(schoolDetails.this, "Delete School Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }
