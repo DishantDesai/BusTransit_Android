@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
+        android:layout_marginTop="30dp"
         android:id="@+id/allNumber"
         android:visibility="invisible">
 
@@ -37,7 +37,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shapeyellow"
+                android:background="@drawable/school_count_bg"
                 android:layout_marginRight="50dp"
                 android:id="@+id/goToSchool"
 
@@ -54,7 +54,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     tools:ignore="MissingConstraints"
                     android:textColor="@color/black"
-                    android:textSize="30dp"
+                    android:textSize="40dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -67,15 +67,15 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:padding="20dp"
                     tools:ignore="MissingConstraints"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textColor="#0E5F07"
+                    android:textSize="25dp"
                     android:textStyle="bold" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shapeyellow"
+                android:background="@drawable/bus_count_bg"
                 android:id="@+id/goToBus">
 
                 <TextView
@@ -88,8 +88,8 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     tools:ignore="MissingConstraints"
-                    android:textColor="@color/black"
-                    android:textSize="30dp"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -101,8 +101,8 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:text="#Bus"
                     android:padding="20dp"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
                     android:textStyle="bold"
                     tools:ignore="MissingConstraints" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -117,53 +117,57 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:id="@+id/goToDriver">
-
+            <TextView
+                android:id="@+id/driverNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                app:layout_constraintBottom_toTopOf="@+id/Driver"
+                android:padding="20dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:ignore="MissingConstraints"
+                android:textColor="@color/black"
+                android:textSize="40dp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/Driver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/driverNo"
+                app:layout_constraintTop_toBottomOf="@+id/driverNo"
                 android:text="# Driver List"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:padding="20dp"
                 tools:ignore="MissingConstraints"
                 android:textColor="@color/black"
-                android:textSize="30dp"
+                android:textSize="25dp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/driverNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10"
-                app:layout_constraintTop_toBottomOf="@+id/Driver"
-                android:padding="20dp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                tools:ignore="MissingConstraints"
-                android:textColor="@color/black"
-                android:textSize="30dp"
-                android:textStyle="bold" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/logout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="190dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="@color/primary"
-            android:text="Logout"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="25dp"
-            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|bottom"
+            android:orientation="vertical"
+            android:layout_marginBottom="30dp">
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:backgroundTint="@color/primary"
+                android:text="Logout"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                />
+        </LinearLayout>
 
-            />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

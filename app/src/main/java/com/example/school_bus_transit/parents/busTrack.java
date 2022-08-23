@@ -246,7 +246,14 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
                         getTime();
                         fetchRoute myAsyncTasks = new fetchRoute();
                         myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
-                        onMapReady(mMap);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Your code to run in GUI thread here
+                                onMapReady(mMap);
+                            }
+                        });
 
 
                     }

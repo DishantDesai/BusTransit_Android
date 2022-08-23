@@ -58,8 +58,9 @@ public class add_new_bus extends AppCompatActivity {
 
         add_bus_no = findViewById(R.id.add_bus_no);
         add_bus_no.setFocusable(false);
-        int val = 100 + constants.allbus.size();
-        add_bus_no.setText(String.valueOf(val));
+        int bus_number = (int)(Math.random() * 100 + 1) + 100 + constants.allbus.size();
+        System.out.println("bus_number"+ bus_number + (int)(Math.random() * 100 + 1) + constants.allbus.size());
+        add_bus_no.setText(String.valueOf(bus_number));
 
 
         endDestination = findViewById(R.id.end_address);
@@ -91,7 +92,6 @@ public class add_new_bus extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addBus(view);
-
             }
         });
 
@@ -165,7 +165,6 @@ public class add_new_bus extends AppCompatActivity {
         public void addBus(View view){
         int addBusNo = Integer.parseInt(add_bus_no.getText().toString());
         String endDestinationAdd = endDestination.getText().toString();
-
         try {
             if (!isBusNumberValid() | ! isAddressValid())
             {
@@ -189,7 +188,6 @@ public class add_new_bus extends AppCompatActivity {
                 bus.put("source",school_address);
                 bus.put("source_lat",school_lat);
                 bus.put("source_long", school_long);
-
 
                 documentReference.set(bus).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

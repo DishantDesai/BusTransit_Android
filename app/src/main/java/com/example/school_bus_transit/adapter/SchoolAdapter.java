@@ -64,7 +64,7 @@ public class SchoolAdapter extends RecyclerView.Adapter<SchoolAdapter.ViewHolder
 //                .into(holder.pic);
 
 
-        holder.pic.setImageResource(R.drawable.logo);
+        holder.pic.setImageResource(R.drawable.school);
 
     }
     @Override

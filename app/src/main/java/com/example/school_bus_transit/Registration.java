@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +19,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.school_bus_transit.helper.constants;
+import com.example.school_bus_transit.model.SchoolModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,6 +43,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -61,7 +69,7 @@ public class Registration extends AppCompatActivity {
     RadioGroup userType,gender;
     ShapeableImageView profileImage;
     Button regBtn;
-    String[] schoolArr = {"Concordia University","John Abbot","Vanier"};
+    String[] schoolArr = {};
     ArrayList<Integer> schoolsList = new ArrayList<>();
 
     FirebaseAuth mAuth;
@@ -99,10 +107,16 @@ public class Registration extends AppCompatActivity {
         String mString = "Sign Up";
         SpannableString spannableStr = new SpannableString("Sign In");
         UnderlineSpan underlineSpan = new UnderlineSpan();
-        spannableStr.setSpan(underlineSpan,0, mString.length(), 0);
+        spannableStr.setSpan(underlineSpan, 0, mString.length(), 0);
         signin.setText(spannableStr);
         schools = findViewById(R.id.schools);
 
+        //Get school list for school dropdown
+        getSchoolList();
+        schoolArr = new String[constants.allschool.size()];
+        for(int i=0;i<constants.allschool.size();i++){
+            schoolArr[i] = constants.allschool.get(i).getname();
+        }
         //Select Profile Image
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +135,7 @@ public class Registration extends AppCompatActivity {
 
         //Select multiple schools from dropdown
         selectedSchools = new boolean[schoolArr.length];
+
         schools.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,7 +204,6 @@ public class Registration extends AppCompatActivity {
                         schools.setText("");
                     }
                 }else{
-
                     schools.setEnabled(true);
                     schools.setAlpha((float) 1);
                 }
@@ -203,6 +217,7 @@ public class Registration extends AppCompatActivity {
                 System.out.println("call ajsdjd");
             }
         });
+
         //Submit button for registration
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -442,7 +457,7 @@ public class Registration extends AppCompatActivity {
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
-                Toast.makeText(Registration.this,status.getStatusMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(Registration.this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
@@ -451,7 +466,32 @@ public class Registration extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void getSchoolList() {
+        FirebaseFirestore.getInstance().collection("School")
+                .get().addOnCompleteListener(
+                        new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    ArrayList<SchoolModel> school = new ArrayList<>();
+                                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                                        school.add(new SchoolModel(doc.getData().get("name").toString(),
+                                                        doc.getData().get("phone_no").toString(),
+                                                        doc.getData().get("school_id").toString(),
+                                                        doc.getData().get("email_id").toString(),
+                                                        doc.getData().get("address").toString(),
+                                                        doc.getData().get("lat").toString(),
+                                                        doc.getData().get("long").toString()
+                                                )
 
+                                        );
+                                    }
+                                    constants.allschool = school;
+                                }
+                            }
+                        }
+                );
+    }
     // UploadImage method
     private void uploadImage() {
         if (filePath != null) {

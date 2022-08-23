@@ -4,7 +4,7 @@
     <item
         android:id="@+id/add_school_icon"
         android:title=""
-        android:icon="@drawable/add_school"
+        android:icon="@drawable/ic_baseline_add_24"
         app:showAsAction="always"
         />
 </menu>

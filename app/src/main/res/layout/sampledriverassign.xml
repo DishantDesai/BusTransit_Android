@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:paddingBottom="16dp"
+    android:layout_marginHorizontal="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="3dp"
     android:layout_marginBottom="16dp">
@@ -25,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/avatar"
             android:scaleType="fitXY"
-            android:id="@+id/school_item_image"
+            android:id="@+id/driver_profile"
             android:layout_marginLeft="20dp" />
 
         <TextView
