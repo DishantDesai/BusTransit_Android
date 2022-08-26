@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -24,8 +26,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.example.school_bus_transit.driver.DriverHomeScreen;
+import com.example.school_bus_transit.driver.driver_not_allowed_screen;
+import com.example.school_bus_transit.helper.FirebaseHelper;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.SchoolModel;
+import com.example.school_bus_transit.model.UserModel;
+import com.example.school_bus_transit.parents.ParentHomeScreen;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -80,7 +88,7 @@ public class Registration extends AppCompatActivity {
     private Uri filePath;
     private String photo_url = null,user_lat,user_long;
 
-    String userID;
+    String userIdProp,nameProp,emailProp,photoUrlProp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +119,13 @@ public class Registration extends AppCompatActivity {
         signin.setText(spannableStr);
         schools = findViewById(R.id.schools);
 
+
+        password.setEnabled(true);
+        confirmPassword.setEnabled(true);
+        password.setAlpha((float) 1);
+        confirmPassword.setAlpha((float) 1);
+        setInitialDataFromGoogleAuth();
+
         //Get school list for school dropdown
         getSchoolList();
         schoolArr = new String[constants.allschool.size()];
@@ -135,7 +150,6 @@ public class Registration extends AppCompatActivity {
 
         //Select multiple schools from dropdown
         selectedSchools = new boolean[schoolArr.length];
-
         schools.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -242,6 +256,28 @@ public class Registration extends AppCompatActivity {
         });
     }
 
+    //Set Data from google auth data
+    private void setInitialDataFromGoogleAuth() {
+        userIdProp = (String) getIntent().getSerializableExtra("user_id");
+        nameProp = (String) getIntent().getSerializableExtra("name");
+        emailProp = (String) getIntent().getSerializableExtra("email");
+        photoUrlProp = (String) getIntent().getSerializableExtra("photo_url");
+
+        if(userIdProp != null && !userIdProp.equals("")){
+            email.getEditText().setText(emailProp);
+            fullName.getEditText().setText(nameProp);
+            if(photoUrlProp != null && !photoUrlProp.equals("")){
+                Glide.with(Registration.this)
+                        .load(photoUrlProp)
+                        .into(profileImage);
+            }
+            password.setEnabled(false);
+            confirmPassword.setEnabled(false);
+            password.setAlpha((float) 0.8);
+            confirmPassword.setAlpha((float) 0.8);
+        }
+    }
+
     private Boolean isNameValid(){
         String name = fullName.getEditText().getText().toString();
         if(name.isEmpty()){
@@ -252,7 +288,17 @@ public class Registration extends AppCompatActivity {
             return true;
         }
     }
+    private Boolean hasImage(){
+        Drawable drawable = profileImage.getDrawable();
+        boolean hasImage = (drawable != null);
 
+        if (hasImage && (drawable instanceof BitmapDrawable)) {
+            hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
+        }
+
+        return hasImage;
+
+    }
     Boolean isEmailValid(){
         String emailVal= email.getEditText().getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
@@ -359,58 +405,109 @@ public class Registration extends AppCompatActivity {
         String genderVal = ((RadioButton) findViewById(genderIdVal)).getText().toString();
 
         try{
-            if(!isNameValid() | !isEmailValid() | !isPhoneNoValid() | !isPasswordValid() | !isConfirmPasswordValid() | !isAddressValid() | (userTypeVal.equalsIgnoreCase("parent") && !isSchoolValid())){
+            if(!isNameValid() | !isEmailValid() | !isPhoneNoValid()  | !isAddressValid() | (userTypeVal.equalsIgnoreCase(constants.PARENT) && !isSchoolValid())){
                 return;
             }
-            String[] arr = new String[schoolsList.size()];
-            for (int i =0;i<schoolsList.size();i++){
-                arr[i] = schoolArr[schoolsList.get(i)];
+            if((userIdProp == null && userIdProp.equals("")) && (!isPasswordValid() | !isConfirmPasswordValid())){
+                return;
+            }
+            if(!hasImage()){
+                Toast.makeText(Registration.this, "Please upload image", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(userIdProp != null && !userIdProp.equals("")){
+                addUserToFirebase(userIdProp,fullnameVal,emailVal,addressVal,phoneVal,userTypeVal,genderVal);
+            }else{
+                mAuth.createUserWithEmailAndPassword(emailVal,passwordVal).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            String userID = mAuth.getCurrentUser().getUid();
+                            addUserToFirebase(userID,fullnameVal,emailVal,addressVal,phoneVal,userTypeVal,genderVal);
+                        }else{
+                            Toast.makeText(Registration.this, "Registration Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
 
-            mAuth.createUserWithEmailAndPassword(emailVal,passwordVal).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()){
-                        userID = mAuth.getCurrentUser().getUid();
-                        DocumentReference documentReference = fStore.collection("User").document(userID);
-                        Map<String,Object> user = new HashMap<>();
-                        user.put("fullName",fullnameVal);
-                        user.put("email_id",emailVal);
-                        user.put("phone_no",phoneVal);
-                        user.put("address",addressVal);
-                        user.put("user_type", userTypeVal);
-                        user.put("user_id",userID);
-                        user.put("bus_id","");
-                        user.put("gender",genderVal);
-                        user.put("photo_url",photo_url);
-                        user.put("user_lat",user_lat);
-                        user.put("user_long",user_long);
-
-                        user.put("school_id", Arrays.asList(arr));
-
-                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                            }
-                        });
-                        Toast.makeText(Registration.this, "User registered successfully", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Registration.this, Login.class));
-                    }else{
-                        Toast.makeText(Registration.this, "Registration Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
         }catch (Exception e){
             System.out.println(e);
         }
     }
 
+    private void addUserToFirebase(String userId, String fullnameVal,String emailVal,String phoneVal,String addressVal,String userTypeVal,String genderVal){
+
+        String[] arr = new String[schoolsList.size()];
+        for (int i =0;i<schoolsList.size();i++){
+            arr[i] = schoolArr[schoolsList.get(i)];
+        }
+
+
+        DocumentReference documentReference = fStore.collection("User").document(userId);
+        Map<String,Object> user = new HashMap<>();
+        user.put("fullName",fullnameVal);
+        user.put("email_id",emailVal);
+        user.put("phone_no",phoneVal);
+        user.put("address",addressVal);
+        user.put("user_type", userTypeVal);
+        user.put("user_id",userId);
+        user.put("bus_id","");
+        user.put("gender",genderVal);
+        user.put("photo_url",photo_url);
+        user.put("user_lat",user_lat);
+        user.put("user_long",user_long);
+
+        user.put("school_id", Arrays.asList(arr));
+
+        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                List<String> schoolList = ((List<String>) user.get("school_id"));
+                constants.CurrentUser  =  new UserModel(
+                        user.get("user_id").toString().trim(),
+                        user.get("photo_url") != null ? user.get("photo_url").toString() :"",
+                        user.get("gender").toString(),
+                        user.get("bus_id") !=null ? user.get("bus_id").toString().trim() :"",
+                        user.get("fullName").toString(),
+                        user.get("phone_no").toString(),
+                        schoolList,
+                        user.get("email_id").toString(),
+                        user.get("address").toString(),
+                        user.get("user_lat").toString().trim(),
+                        user.get("user_long").toString().trim(),
+                        user.get("user_type").toString()
+                );
+                Toast.makeText(Registration.this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                if(constants.CurrentUser.getUserType().equalsIgnoreCase(constants.DRIVER))
+                {
+                    if(constants.CurrentUser.getbus_id().equals(""))
+                    {
+                        startActivity(new Intent(Registration.this, driver_not_allowed_screen.class));
+                    }
+                    else
+                    {
+                        FirebaseHelper.getBusModel();
+                        startActivity(new Intent(Registration.this, DriverHomeScreen.class));
+//                                    startActivity(new Intent(Login.this, DriverNotification.class));
+
+                    }
+                }
+                else
+                {
+                    startActivity(new Intent(Registration.this, ParentHomeScreen.class));
+                }
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+    }
     //Image Picker
     private void SelectImage() {
 

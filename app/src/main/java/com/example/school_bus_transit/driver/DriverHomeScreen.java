@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,7 +69,7 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
     StorageReference storageReference;
     BottomNavigationView bottomNav ;
     GPSTracker locationHelper;
-
+    MaterialToolbar topbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +88,10 @@ public class DriverHomeScreen extends AppCompatActivity implements OnMapReadyCal
         stopTrip = findViewById(R.id.stopTrip);
         stopTrip.setActivated(false);
         bottomNav = findViewById(R.id.driver_bottomNavigationView);
+
+
+        topbar = findViewById(R.id.driver_home_topbar);
+        topbar.setTitle("Welcome " + constants.CurrentUser.getfullName());
 
         userIcon = findViewById(R.id.add_user_icon);
 

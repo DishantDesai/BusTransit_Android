@@ -47,6 +47,8 @@ public class schoolDetails extends AppCompatActivity implements Serializable
     MaterialToolbar topAppBar;
     Button deleteSchoolBtn;
     FirebaseFirestore fStore;
+
+    MaterialToolbar topbar;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -59,7 +61,7 @@ public class schoolDetails extends AppCompatActivity implements Serializable
         String school_id = (String) getIntent().getSerializableExtra("school_id");
         mContext=getApplicationContext();
 
-        topAppBar = (MaterialToolbar)findViewById(R.id.topAppBar);
+        topAppBar = (MaterialToolbar)findViewById(R.id.school_detail_topbar);
         topAppBar.setOnMenuItemClickListener(new MaterialToolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
