@@ -16,6 +16,7 @@ import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.adapter.parentNotificationAdapter;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.model.NotificationModel;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,6 +33,7 @@ public class ParentNotification extends AppCompatActivity {
     ArrayList<NotificationModel> notificationModelData =new ArrayList<>();
     RecyclerView recyclerViewNotificationList;
     private RecyclerView.Adapter notificationAdapter;
+    MaterialToolbar topbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,6 +43,9 @@ public class ParentNotification extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_parent_notification);
         getNotification();
+        topbar = findViewById(R.id.ParentNotification_topAppBar);
+
+        topbar.setTitle("Welcome " + constants.CurrentUser.getfullName());
     }
 
     public void getNotification()

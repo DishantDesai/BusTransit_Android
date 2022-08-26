@@ -143,14 +143,13 @@
                 android:id="@+id/google_signIn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginRight="35dp"
                 app:srcCompat="@drawable/google" />
 
-            <ImageView
-                android:id="@+id/facebook_signIn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:srcCompat="@drawable/fb_logo" />
+<!--            <ImageView-->
+<!--                android:id="@+id/facebook_signIn"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                app:srcCompat="@drawable/fb_logo" />-->
 
         </LinearLayout>
     </LinearLayout>

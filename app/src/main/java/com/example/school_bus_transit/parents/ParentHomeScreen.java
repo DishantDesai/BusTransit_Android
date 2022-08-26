@@ -32,6 +32,7 @@ import com.example.school_bus_transit.model.UserModel;
 import com.example.school_bus_transit.model.parentScreenModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.datepicker.OnSelectionChangedListener;
 import com.google.android.material.navigation.NavigationView;
@@ -48,6 +49,7 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
     private RecyclerView.Adapter busAdapter;
     NavigationView bottomNavigationView;
     View userIcon;
+    MaterialToolbar topbar;
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -106,6 +108,9 @@ public class ParentHomeScreen extends AppCompatActivity implements NavigationVie
         getSupportActionBar().hide();
 
         userIcon = findViewById(R.id.add_user_icon);
+
+        topbar = findViewById(R.id.topAppBar);
+        topbar.setTitle("Welcome " + constants.CurrentUser.getfullName());
 
         userIcon.setOnClickListener(new View.OnClickListener() {
             @Override

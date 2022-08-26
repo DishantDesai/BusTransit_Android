@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class constants {
-    public final static String DRIVER = "driver";
-    public final static String PARENT = "parent";
+    public final static String DRIVER = "DRIVER";
+    public final static String PARENT = "PARENT";
     public static UserModel CurrentUser,CurrentSelectedDriver;
     public static BusModel CurrentBus = new BusModel(
             false,
