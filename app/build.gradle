@@ -57,4 +57,6 @@ dependencies {
     def lottieVersion = "5.0.2"
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
 }

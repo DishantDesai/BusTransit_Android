@@ -33,7 +33,7 @@
                 app:title="Welcome User" />
 
 
-            <fragment
+            <FrameLayout
                 android:id="@+id/DriverMap"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
@@ -52,8 +52,8 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
                 android:background="@color/green"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
+                android:paddingLeft="26dp"
+                android:paddingRight="26dp"
                 android:layout_marginHorizontal="70dp"
                 android:text="Trip From School"
                 android:textAlignment="center"
@@ -70,8 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:paddingLeft="45dp"
-                android:paddingRight="45dp"
+                android:paddingLeft="41dp"
+                android:paddingRight="41dp"
                 android:text="Trip To School"
                 android:textAlignment="center"
                 android:textColor="@color/green"
@@ -88,8 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:paddingLeft="80dp"
-                android:paddingRight="80dp"
+                android:paddingLeft="76dp"
+                android:paddingRight="76dp"
                 android:text="Stop Trip"
                 android:textAlignment="center"
                 android:textColor="@color/red"

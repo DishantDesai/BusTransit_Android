@@ -65,8 +65,8 @@ public class Login extends AppCompatActivity {
         pass = findViewById(R.id.password);
         googleSignIn = findViewById(R.id.google_signIn);
 
-        email.getEditText().setText("admin");
-        pass.getEditText().setText("admin");
+        email.getEditText().setText("driver@gmail.com");
+        pass.getEditText().setText("Driver@123");
 
         loginBtn=findViewById(R.id.login);
 

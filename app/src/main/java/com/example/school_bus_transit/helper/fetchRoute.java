@@ -20,6 +20,7 @@ public class fetchRoute extends AsyncTask<String, String, String> {
         super.onPreExecute();
         // display a progress dialog to show the user what is happening
 
+
     }
     @Override
     protected String doInBackground(String... params) {
