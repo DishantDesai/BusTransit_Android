@@ -201,15 +201,16 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         BitmapDescriptor logo_school = BitmapDescriptorFactory.fromResource(R.drawable.school_icon);
 
 
-        LatLng curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
-        LatLng des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
-        LatLng source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
 
-        mMap.addMarker(new MarkerOptions().icon(logo_home).position(des).title(constants.CurrentBus.getdestination()));
-        mMap.addMarker(new MarkerOptions().icon(logo_school).position(source).title(constants.CurrentBus.getsource()));
 
         if (!constants.CurrentBus.getcurrent_lat().equals("") && constants.CurrentBus.getactive_sharing()) {
 
+            LatLng curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
+            LatLng des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
+            LatLng source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
+
+            mMap.addMarker(new MarkerOptions().icon(logo_home).position(des).title(constants.CurrentBus.getdestination()));
+            mMap.addMarker(new MarkerOptions().icon(logo_school).position(source).title(constants.CurrentBus.getsource()));
             mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
 
 //       find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
