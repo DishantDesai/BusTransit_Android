@@ -115,13 +115,13 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
 
     String getMapsApiDirectionsUrl()
     {
-        String str_dest = "destination=" + constants.CurrentBus.getdestination_lat() + "," + constants.CurrentBus.getdestination_long();
+        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
+        String str_dest = "destination=" + constants.CurrentUser.getuser_lat() + "," + constants.CurrentUser.getuser_long();
+
         if(constants.CurrentBus.getgoing_to_school())
         {
             str_dest = "destination=" + constants.CurrentBus.getsource_lat() + "," + constants.CurrentBus.getsource_long();
         }
-        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
-
 
         String sensor = "sensor=false";
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true"
@@ -133,11 +133,17 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
 
     String getMapsApiTimeUrl() {
         String str_origin = "origins=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
-        String str_dest = "destinations=" + constants.CurrentBus.getdestination_lat() + "," + constants.CurrentBus.getdestination_long();
-        String parameters = "units=imperial&"+str_origin + "&" + str_dest
+        String str_dest = "destinations=" + constants.CurrentUser.getuser_lat() + "," + constants.CurrentUser.getuser_long();
+
+        if(constants.CurrentBus.getgoing_to_school())
+        {
+            str_dest = "destinations=" + constants.CurrentBus.getsource_lat() + "," + constants.CurrentBus.getsource_long();
+        }
+        String parameters = "units=imperial&"+ str_origin + "&" + str_dest
                 +"&key="+"AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw";
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/distancematrix/" + output + "?" + parameters;
+
         return url;
     }
 
@@ -149,13 +155,19 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
                     try{
                         //Create a JSON object containing information from the API.
                         JSONObject myJsonObject = new JSONObject(response);
-                        System.out.println(myJsonObject);
+
 
                         String dis  = myJsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance").get("text").toString();
                         String dur  = myJsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").get("text").toString();
 
-                        duration.setText(dur);
-                        distance.setText(dis);
+                        if(constants.CurrentBus.getactive_sharing()){
+                            duration.setText(dur);
+                            distance.setText(dis);
+                        }else{
+                            duration.setText("-");
+                            distance.setText("-");
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -206,9 +218,12 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         if (!constants.CurrentBus.getcurrent_lat().equals("") && constants.CurrentBus.getactive_sharing()) {
 
             LatLng curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
-            LatLng des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
+            LatLng des = new LatLng(Double.parseDouble(constants.CurrentUser.getuser_lat()), Double.parseDouble(constants.CurrentUser.getuser_long()));
             LatLng source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
 
+            if(constants.CurrentBus.getgoing_to_school()){
+                des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
+            }
             mMap.addMarker(new MarkerOptions().icon(logo_home).position(des).title(constants.CurrentBus.getdestination()));
             mMap.addMarker(new MarkerOptions().icon(logo_school).position(source).title(constants.CurrentBus.getsource()));
             mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
