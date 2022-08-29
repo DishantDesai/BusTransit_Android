@@ -15,7 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.helper.DirectionsJSONParser;
@@ -24,6 +29,7 @@ import com.example.school_bus_transit.helper.fetchRoute;
 import com.example.school_bus_transit.model.BusModel;
 import com.example.school_bus_transit.model.SchoolModel;
 import com.example.school_bus_transit.model.UserModel;
+import com.example.school_bus_transit.parents.busTrack;
 import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -117,21 +123,21 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         });
 
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Your code to run in GUI thread here
-                        onMapReady(mMap);
-                    }
-                });
-
-            }
-        }, 12000);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//
+//
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // Your code to run in GUI thread here
+//                        onMapReady(mMap);
+//                    }
+//                });
+//
+//            }
+//        }, 12000);
 
     }
 
@@ -186,7 +192,7 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                 tripDirection.setText("Going to School");
             }
             else
-                tripDirection.setText("Going from School");
+                tripDirection.setText("Coming from School");
 
         }else{
             tripStatus.setText("Off");
@@ -205,7 +211,11 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
         mMap = googleMap;
         mMap.clear();
         mMap.setOnCameraMoveStartedListener(this);
+
+
         BitmapDescriptor logo = BitmapDescriptorFactory.fromResource(R.drawable.logo1);
+        BitmapDescriptor logo_home = BitmapDescriptorFactory.fromResource(R.drawable.home_icon);
+        BitmapDescriptor logo_school = BitmapDescriptorFactory.fromResource(R.drawable.school_icon);
         // Add a marker in Sydney and move the camera
 //        LatLng curr = new LatLng(Double.parseDouble(b.getcurrent_lat()), Double.parseDouble(b.getcurrent_long()));
 
@@ -215,8 +225,8 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
 
         //Map control settings
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(des).title(b.getdestination()));
-        mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).position(source).title(b.getsource()));
+        mMap.addMarker(new MarkerOptions().icon(logo_home).position(des).title(b.getdestination()));
+        mMap.addMarker(new MarkerOptions().icon(logo_school).position(source).title(b.getsource()));
 
 
         if(b.getactive_sharing()){
@@ -233,31 +243,60 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                 routeCoordinates.color(Color.BLUE);
                 Polyline route = mMap.addPolyline(routeCoordinates);
             }
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 25));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(des )      // Sets the center of the map to Mountain View
+                    .zoom(15)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 25));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
-        mMap.animateCamera(CameraUpdateFactory.zoomIn());
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(des )      // Sets the center of the map to Mountain View
-                .zoom(15)                   // Sets the zoom
-                .bearing(90)                // Sets the orientation of the camera to east
-                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 
     }
 
     private String getMapsApiDirectionsUrl() {
-        String str_origin = "origin=" + b.getsource_lat() + "," + b.getsource_long();
-        String str_dest = "destination=" + b.getdestination_lat() + "," + b.getdestination_long();
+        String str_dest = "destination=" + constants.CurrentBus.getdestination_lat() + "," + constants.CurrentBus.getdestination_long();
+        if(constants.CurrentBus.getgoing_to_school())
+        {
+            str_dest = "destination=" + constants.CurrentBus.getsource_lat() + "," + constants.CurrentBus.getsource_long();
+        }
+        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
+
         String sensor = "sensor=false";
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true"
                 +"&key="+"AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw";
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
+    }
+
+    public void getRouteUpdate()
+    {
+
+        StringRequest myRequest = new StringRequest(Request.Method.GET, getMapsApiDirectionsUrl(),
+                response -> {
+                    try{
+
+                        constants.routes = new DirectionsJSONParser().parse(new JSONObject(response));
+                        onMapReady(mMap);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                volleyError -> Toast.makeText(this, volleyError.getMessage(), Toast.LENGTH_SHORT).show()
+        );
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(myRequest);
+
+
     }
 
     private void getdata() {
@@ -272,7 +311,7 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                             boolean activeSharing = (boolean) doc.getData().get("active_sharing");
                             boolean goingToToSchool = (boolean) doc.getData().get("going_to_school");
 
-                            constants.allbus.remove(b);
+//                            constants.allbus.remove(b);
                             b =new BusModel(
                                     activeSharing,
                                     goingToToSchool,
@@ -288,10 +327,12 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                                     doc.getData().get("source_lat").toString(),
                                     doc.getData().get("source_long").toString()
                             );
-                            constants.allbus.add(b);
+                            constants.CurrentBus = b;
+//                            constants.allbus.add(b);
 
-                            fetchRoute myAsyncTasks = new fetchRoute();
-                            myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
+//                            fetchRoute myAsyncTasks = new fetchRoute();
+//                            myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
+                            getRouteUpdate();
 
                         }
                         runOnUiThread(new Runnable() {
