@@ -122,23 +122,6 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
             }
         });
 
-
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//
-//
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        // Your code to run in GUI thread here
-//                        onMapReady(mMap);
-//                    }
-//                });
-//
-//            }
-//        }, 12000);
-
     }
 
     void setData()
@@ -245,11 +228,11 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
             }
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 25));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
             mMap.animateCamera(CameraUpdateFactory.zoomIn());
             mMap.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(des )      // Sets the center of the map to Mountain View
+                    .target(curr )      // Sets the center of the map to Mountain View
                     .zoom(15)                   // Sets the zoom
                     .bearing(90)                // Sets the orientation of the camera to east
                     .tilt(30)                   // Sets the tilt of the camera to 30 degrees
@@ -328,6 +311,20 @@ public class DriverBusInfo extends AppCompatActivity  implements OnMapReadyCallb
                                     doc.getData().get("source_long").toString()
                             );
                             constants.CurrentBus = b;
+                            if(b.getactive_sharing())
+                            {
+                                tripStatus.setText("On");
+                                if(b.getgoing_to_school())
+                                {
+                                    tripDirection.setText("Going to School");
+                                }
+                                else
+                                    tripDirection.setText("Coming from School");
+
+                            }else{
+                                tripStatus.setText("Off");
+                                tripDirection.setText("-");
+                            }
 //                            constants.allbus.add(b);
 
 //                            fetchRoute myAsyncTasks = new fetchRoute();
