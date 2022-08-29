@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.Registration;
 import com.example.school_bus_transit.driver.DriverProfile;
@@ -118,8 +119,10 @@ public class parentProfile extends AppCompatActivity {
         user_lat = constants.CurrentUser.getuser_lat();
         user_long = constants.CurrentUser.getuser_long();
         photo_url = constants.CurrentUser.getphoto_url();
-        
-        
+
+        Glide.with(this)
+                .load(photo_url)
+                .into(parentProfileImage);
 
         //Select Profile Image
         parentProfileImage.setOnClickListener(new View.OnClickListener() {

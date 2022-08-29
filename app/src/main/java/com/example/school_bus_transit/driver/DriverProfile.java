@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.school_bus_transit.R;
 import com.example.school_bus_transit.Registration;
 import com.example.school_bus_transit.helper.constants;
@@ -100,6 +101,10 @@ public class DriverProfile extends AppCompatActivity {
         user_lat = constants.CurrentUser.getuser_lat();
         user_long = constants.CurrentUser.getuser_long();
         photo_url = constants.CurrentUser.getphoto_url();
+
+        Glide.with(this)
+                .load(photo_url)
+                .into(driverProfileImage);
 
 
         if(constants.CurrentUser.getgender().toLowerCase().equals("female"))
