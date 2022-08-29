@@ -1,5 +1,7 @@
 package com.example.school_bus_transit;
 
+import static com.example.school_bus_transit.helper.constants.CurrentBus;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,11 +15,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.school_bus_transit.helper.DirectionsJSONParser;
 import com.example.school_bus_transit.helper.FirebaseHelper;
 import com.example.school_bus_transit.helper.GPSTracker;
 import com.example.school_bus_transit.helper.LocationGetter;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.helper.fetchRoute;
+import com.example.school_bus_transit.parents.busTrack;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +38,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,14 +83,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public void LocationChangeListner(double latitude, double longitude) {
 
-                if(constants.CurrentBus!=null && constants.CurrentBus.getactive_sharing())
+                if(CurrentBus!=null && CurrentBus.getactive_sharing())
                 {
                     if(isTripOn)
                     {
                         LocationChange(latitude,longitude);
 
-                         createRoute();
-                         onMapReady(mMap);
+//                         createRoute();
+//                         onMapReady(mMap);
+                        getRouteUpdate();
 
                     }
 
@@ -154,27 +166,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 //        setGoogleMapType(googleMap);
         setZoom_and_Rotation(googleMap);
 
-        if (constants.CurrentBus != null)
+        if (CurrentBus != null)
         {
 
             BitmapDescriptor logo_bus = BitmapDescriptorFactory.fromResource(R.drawable.logo1);
             BitmapDescriptor logo_home = BitmapDescriptorFactory.fromResource(R.drawable.home_icon);
             BitmapDescriptor logo_school = BitmapDescriptorFactory.fromResource(R.drawable.school_icon);
 
-            LatLng curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
-            LatLng des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
-            LatLng source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
+
+            LatLng des = new LatLng(Double.parseDouble(CurrentBus.getdestination_lat()), Double.parseDouble(CurrentBus.getdestination_long()));
+            LatLng source = new LatLng(Double.parseDouble(CurrentBus.getsource_lat()), Double.parseDouble(CurrentBus.getsource_long()));
 
 
+            addMarker(googleMap,"Destination",des,logo_home,false);
+            addMarker(googleMap,"School",source,logo_school,false);
 
-            if(constants.CurrentBus.getactive_sharing())
+            if(CurrentBus.getactive_sharing())
             {
-                addMarker(googleMap,"Destination",des,logo_home,false);
-                addMarker(googleMap,"School",source,logo_school,false);
-                addMarker(googleMap,"Current",curr,logo_bus,true);
+                LatLng curr = new LatLng(Double.parseDouble(CurrentBus.getcurrent_lat()), Double.parseDouble(CurrentBus.getcurrent_long()));
+                addMarker(googleMap,"Bus Number " + (constants.CurrentBus.getbus_number()).toString(),curr,logo_bus,true);
 
                 //find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
-                createRoute();
                 PolylineOptions routeCoordinates = new PolylineOptions();
                 if(constants.routes.size()!=0)
                 {
@@ -185,33 +197,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                     routeCoordinates.color(Color.BLUE);
                     Polyline route = mMap.addPolyline(routeCoordinates);
                 }
-            }
-            else
-            {
-                addMarker(googleMap,"Destination",des,logo_home,false);
-                addMarker(googleMap,"School",source,logo_school,false);
-            }
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 15));
-            if(isFirstCall)
-            {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 15));
-                mMap.animateCamera(CameraUpdateFactory.zoomIn());
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(curr)      // Sets the center of the map to Mountain View
-                        .zoom(15)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                isFirstCall = false;
+                if(isFirstCall)
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(des));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr, 15));
+                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(curr)      // Sets the center of the map to Mountain View
+                            .zoom(15)                   // Sets the zoom
+                            .bearing(90)                // Sets the orientation of the camera to east
+                            .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                            .build();                   // Creates a CameraPosition from the builder
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    isFirstCall = false;
+                }
+
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
             }
-
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
         }
 
 
@@ -221,9 +228,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     String getMapsApiDirectionsUrl() {
 
-        String dest_lat = constants.CurrentBus.getgoing_to_school() ? constants.CurrentBus.getsource_lat() : constants.CurrentBus.getdestination_lat();
-        String dest_long = constants.CurrentBus.getgoing_to_school() ? constants.CurrentBus.getsource_long() : constants.CurrentBus.getdestination_long();
-        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
+        String dest_lat = CurrentBus.getgoing_to_school() ? CurrentBus.getsource_lat() : CurrentBus.getdestination_lat();
+        String dest_long = CurrentBus.getgoing_to_school() ? CurrentBus.getsource_long() : CurrentBus.getdestination_long();
+        String str_origin = "origin=" + CurrentBus.getcurrent_lat()+ "," + CurrentBus.getcurrent_long();
         String str_dest = "destination=" + dest_lat + "," + dest_long;
         String sensor = "sensor=false";
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true"
@@ -239,19 +246,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             System.out.println("Trip from school clicked   -1-");
         try {
 
-            if (!constants.CurrentBus.getactive_sharing()) {
+            if (!CurrentBus.getactive_sharing()) {
 
                 Map<String, Object> bus_update = new HashMap<>();
                 bus_update.put("going_to_school", false);
                 bus_update.put("active_sharing", true);
-                fStore.collection("Bus").document(constants.CurrentBus.getbus_id()).update(bus_update);
+                fStore.collection("Bus").document(CurrentBus.getbus_id()).update(bus_update);
                 Toast.makeText(context, "Trip started from School", Toast.LENGTH_SHORT).show();
-                constants.CurrentBus.setactive_sharing(true);
-                constants.CurrentBus.setgoing_to_school(false);
+                CurrentBus.setactive_sharing(true);
+                CurrentBus.setgoing_to_school(false);
 
                 isTripOn = true;
-                createRoute();
-                onMapReady(mMap);
+//                createRoute();
+//                onMapReady(mMap);
+
+                getRouteUpdate();
 
             }
             tripToSchool.setEnabled(false);
@@ -265,18 +274,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         System.out.println("Trip to school clicked...........  -2-");
         try {
 
-            if (!constants.CurrentBus.getactive_sharing()) {
+            if (!CurrentBus.getactive_sharing()) {
 
                 Map<String, Object> bus_update = new HashMap<>();
                 bus_update.put("going_to_school", true);
                 bus_update.put("active_sharing", true);
-                fStore.collection("Bus").document(constants.CurrentBus.getbus_id()).update(bus_update);
+                fStore.collection("Bus").document(CurrentBus.getbus_id()).update(bus_update);
                 Toast.makeText(context, "Trip started to School", Toast.LENGTH_SHORT).show();
-                constants.CurrentBus.setactive_sharing(true);
-                constants.CurrentBus.setgoing_to_school(true);
+                CurrentBus.setactive_sharing(true);
+                CurrentBus.setgoing_to_school(true);
                 isTripOn = true;
-                createRoute();
-                onMapReady(mMap);
+//                createRoute();
+//                onMapReady(mMap);
+
+                getRouteUpdate();
 
             }
             tripFromSchool.setEnabled(false);
@@ -292,16 +303,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         System.out.println("Trip stoped clicked...........  -3-");
         try {
 
-            if (constants.CurrentBus.getactive_sharing() || constants.CurrentBus.getactive_sharing()) {
+            if (CurrentBus.getactive_sharing() || CurrentBus.getactive_sharing()) {
 
                 Map<String, Object> bus_update = new HashMap<>();
                 bus_update.put("going_to_school", false);
                 bus_update.put("active_sharing", false);
-                fStore.collection("Bus").document(constants.CurrentBus.getbus_id()).update(bus_update);
+                fStore.collection("Bus").document(CurrentBus.getbus_id()).update(bus_update);
                 Toast.makeText(context, "Trip has been stopped", Toast.LENGTH_SHORT).show();
-                constants.CurrentBus.setactive_sharing(false);
-                constants.CurrentBus.setgoing_to_school(false);
+                CurrentBus.setactive_sharing(false);
+                CurrentBus.setgoing_to_school(false);
                 showOnlySource_and_Destination(mMap);
+
+                getRouteUpdate();
+
                 isTripOn = false;
             }
             tripFromSchool.setEnabled(true);
@@ -315,18 +329,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     public void LocationChange(double latitude, double longitude)
     {
 
-        constants.CurrentBus.setcurrent_lat(String.valueOf(latitude));
-        constants.CurrentBus.setcurrent_long(String.valueOf(longitude));
+        CurrentBus.setcurrent_lat(String.valueOf(latitude));
+        CurrentBus.setcurrent_long(String.valueOf(longitude));
 
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Your code to run in GUI thread here
-//                onMapReady(mMap);
-//            }
-//        });
-
-        FirebaseHelper.update2Field("Bus", constants.CurrentBus.getbus_id(),
+        FirebaseHelper.update2Field("Bus", CurrentBus.getbus_id(),
                 "current_lat", String.valueOf(latitude),
                 "current_long", String.valueOf(longitude));
                 Toast.makeText(context, latitude + " -  VVV - " + longitude, Toast.LENGTH_SHORT).show();
@@ -341,6 +347,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     }
 
+    public void getRouteUpdate()
+    {
+
+        StringRequest myRequest = new StringRequest(Request.Method.GET, getMapsApiDirectionsUrl(),
+                response -> {
+                    try{
+                        constants.routes = new DirectionsJSONParser().parse(new JSONObject(response));
+                        onMapReady(mMap);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                volleyError -> Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_SHORT).show()
+        );
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(myRequest);
+
+
+    }
+
 
     public void showOnlySource_and_Destination(GoogleMap googleMap)
     {
@@ -349,8 +376,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         BitmapDescriptor logo_home = BitmapDescriptorFactory.fromResource(R.drawable.home_icon);
         BitmapDescriptor logo_school = BitmapDescriptorFactory.fromResource(R.drawable.school_icon);
 
-        LatLng des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
-        LatLng source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
+        LatLng des = new LatLng(Double.parseDouble(CurrentBus.getdestination_lat()), Double.parseDouble(CurrentBus.getdestination_long()));
+        LatLng source = new LatLng(Double.parseDouble(CurrentBus.getsource_lat()), Double.parseDouble(CurrentBus.getsource_long()));
 
         addMarker(googleMap,"Destination",des,logo_home,false);
         addMarker(googleMap,"School",source,logo_school,true);

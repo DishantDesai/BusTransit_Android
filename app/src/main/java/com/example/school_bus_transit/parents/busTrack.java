@@ -17,6 +17,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.school_bus_transit.R;
+import com.example.school_bus_transit.admin.DriverBusInfo;
+import com.example.school_bus_transit.helper.DirectionsJSONParser;
 import com.example.school_bus_transit.helper.constants;
 import com.example.school_bus_transit.helper.fetchRoute;
 import com.example.school_bus_transit.model.BusModel;
@@ -47,7 +49,12 @@ import com.google.firebase.storage.StorageReference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -89,21 +96,21 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Your code to run in GUI thread here
-                        onMapReady(mMap);
-                    }
-                });
-
-            }
-        }, 12000);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//
+//
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // Your code to run in GUI thread here
+//                        onMapReady(mMap);
+//                    }
+//                });
+//
+//            }
+//        }, 12000);
     }
 
     String getMapsApiDirectionsUrl()
@@ -160,6 +167,31 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         requestQueue.add(myRequest);
     }
 
+    public void getRouteUpdate()
+    {
+
+        StringRequest myRequest = new StringRequest(Request.Method.GET, getMapsApiDirectionsUrl(),
+                response -> {
+                    try{
+//                        //Create a JSON object containing information from the API.
+//                        JSONObject myJsonObject = new JSONObject(response);
+//                        System.out.println(myJsonObject);
+
+                        constants.routes = new DirectionsJSONParser().parse(new JSONObject(response));
+                        onMapReady(mMap);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                volleyError -> Toast.makeText(busTrack.this, volleyError.getMessage(), Toast.LENGTH_SHORT).show()
+        );
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(myRequest);
+
+
+    }
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
@@ -167,31 +199,18 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         BitmapDescriptor logo = BitmapDescriptorFactory.fromResource(R.drawable.logo1);
         BitmapDescriptor logo_home = BitmapDescriptorFactory.fromResource(R.drawable.home_icon);
         BitmapDescriptor logo_school = BitmapDescriptorFactory.fromResource(R.drawable.school_icon);
-        // Add a marker in Sydney and move the camera
-//        LatLng curr = new LatLng(Double.parseDouble(b.getcurrent_lat()), Double.parseDouble(b.getcurrent_long()));
-
-        if (!constants.CurrentBus.getcurrent_lat().equals("")) {
-
-            LatLng curr;
-            LatLng des;
-            LatLng source;
 
 
-                curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
-                des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
-                source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
+        LatLng curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
+        LatLng des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
+        LatLng source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
 
-//            if (!constants.CurrentBus.getgoing_to_school()) {
-//
-//                des = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
-//                source = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
-//            }
+        mMap.addMarker(new MarkerOptions().icon(logo_home).position(des).title(constants.CurrentBus.getdestination()));
+        mMap.addMarker(new MarkerOptions().icon(logo_school).position(source).title(constants.CurrentBus.getsource()));
 
+        if (!constants.CurrentBus.getcurrent_lat().equals("") && constants.CurrentBus.getactive_sharing()) {
 
-            mMap.addMarker(new MarkerOptions().icon(logo_home).position(des).title(constants.CurrentBus.getdestination()));
-            mMap.addMarker(new MarkerOptions().icon(logo_school).position(source).title(constants.CurrentBus.getsource()));
-            if(constants.CurrentBus.getactive_sharing())
-                mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
+            mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
 
 //       find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
             PolylineOptions routeCoordinates = new PolylineOptions();
@@ -259,16 +278,17 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
 
                         }
                         getTime();
-                        fetchRoute myAsyncTasks = new fetchRoute();
-                        myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
+//                        fetchRoute myAsyncTasks = new fetchRoute();
+//                        myAsyncTasks.execute(getMapsApiDirectionsUrl(),"","");
+                        getRouteUpdate();  // --newly
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Your code to run in GUI thread here
-                                onMapReady(mMap);
-                            }
-                        });
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                // Your code to run in GUI thread here
+//                                onMapReady(mMap);
+//                            }
+//                        });
 
 
                     }
