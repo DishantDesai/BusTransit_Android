@@ -176,7 +176,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 //find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
                 createRoute();
                 PolylineOptions routeCoordinates = new PolylineOptions();
-
                 if(constants.routes.size()!=0)
                 {
                     for (HashMap<String, String> latLng : constants.routes.get(0)) {

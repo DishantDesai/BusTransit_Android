@@ -106,9 +106,16 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         }, 12000);
     }
 
-    String getMapsApiDirectionsUrl() {
-        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
+    String getMapsApiDirectionsUrl()
+    {
         String str_dest = "destination=" + constants.CurrentBus.getdestination_lat() + "," + constants.CurrentBus.getdestination_long();
+        if(constants.CurrentBus.getgoing_to_school())
+        {
+            str_dest = "destination=" + constants.CurrentBus.getsource_lat() + "," + constants.CurrentBus.getsource_long();
+        }
+        String str_origin = "origin=" + constants.CurrentBus.getcurrent_lat()+ "," + constants.CurrentBus.getcurrent_long();
+
+
         String sensor = "sensor=false";
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + "driving" + "&alternatives=true"
                 +"&key="+"AIzaSyAgpLONoQLPhvXWh05qs8cCBdmZS9NDolw";
@@ -152,31 +159,39 @@ public class busTrack extends AppCompatActivity implements OnMapReadyCallback {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(myRequest);
     }
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
 
         BitmapDescriptor logo = BitmapDescriptorFactory.fromResource(R.drawable.logo1);
+        BitmapDescriptor logo_home = BitmapDescriptorFactory.fromResource(R.drawable.home_icon);
+        BitmapDescriptor logo_school = BitmapDescriptorFactory.fromResource(R.drawable.school_icon);
         // Add a marker in Sydney and move the camera
 //        LatLng curr = new LatLng(Double.parseDouble(b.getcurrent_lat()), Double.parseDouble(b.getcurrent_long()));
 
         if (!constants.CurrentBus.getcurrent_lat().equals("")) {
 
-
-            LatLng curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
-            LatLng des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
-            LatLng source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
-
-            if (!constants.CurrentBus.getgoing_to_school()) {
-
-                des = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
-                source = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
-            }
+            LatLng curr;
+            LatLng des;
+            LatLng source;
 
 
-            mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(des).title(constants.CurrentBus.getdestination()));
-            mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).position(source).title(constants.CurrentBus.getsource()));
-            mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
+                curr = new LatLng(Double.parseDouble(constants.CurrentBus.getcurrent_lat()), Double.parseDouble(constants.CurrentBus.getcurrent_long()));
+                des = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
+                source = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
+
+//            if (!constants.CurrentBus.getgoing_to_school()) {
+//
+//                des = new LatLng(Double.parseDouble(constants.CurrentBus.getsource_lat()), Double.parseDouble(constants.CurrentBus.getsource_long()));
+//                source = new LatLng(Double.parseDouble(constants.CurrentBus.getdestination_lat()), Double.parseDouble(constants.CurrentBus.getdestination_long()));
+//            }
+
+
+            mMap.addMarker(new MarkerOptions().icon(logo_home).position(des).title(constants.CurrentBus.getdestination()));
+            mMap.addMarker(new MarkerOptions().icon(logo_school).position(source).title(constants.CurrentBus.getsource()));
+            if(constants.CurrentBus.getactive_sharing())
+                mMap.addMarker(new MarkerOptions().icon(logo).position(curr).title("Going to " + constants.CurrentBus.getdestination()));
 
 //       find all latlong of shortesh path and add into list and uncomment below lines ,  path will be ready in map
             PolylineOptions routeCoordinates = new PolylineOptions();
